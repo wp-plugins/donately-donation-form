@@ -53,6 +53,9 @@ There are no monthly fees from Donately, but there is a small (under 2% average)
 = 1.0.1 =
 * Readme Tweaks
 
+= 1.0.2 =
+* Banner fix
+
 == Upgrade Notice ==
 
 = 1.0.0 =
