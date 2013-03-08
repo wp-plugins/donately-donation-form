@@ -1,0 +1,86 @@
+
+div#formjs.modal.fade.thin.campaign_donate {display:none;}
+
+.box-sizing{box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;}
+.donately-donation-form{font-size:13px;line-height:1em;position:relative;width:680px;min-width:680px;max-width:680px;margin:0 auto;}
+.donately-donation-form ::-webkit-input-placeholder{color:#d3d3d3;}
+.donately-donation-form :-moz-placeholder{color:#d3d3d3;}
+.donately-donation-form button[disabled],.donately-donation-form input[disabled]{cursor:default;}
+.donately-donation-form button::-moz-focus-inner,.donately-donation-form input::-moz-focus-inner{border:0;padding:0;}
+.donately-donation-form a{color:#135c9b;}
+.donately-donation-form a:focus{outline:thin dotted;}
+.donately-donation-form a:active,.donately-donation-form a:hover{outline:0;color:#062a49;}
+
+.donately-secure-fields{border:1px solid #D7DADD;background-color:#EFF3F5;padding:0;margin:0 0 1.92em;border-radius:3px;float:right;width:300px}
+.donately-secure-fields .donately-fields{padding-left:1.15em;padding-right:1.15em;}
+.donately-secure-header{font-size:0.77em;background-color:#e8ebed;text-transform:uppercase;color:#83939b;padding:1em 1.5em;margin-bottom:1em;box-shadow:inset 0px 1px 0px rgba(255, 255, 255, 0.3);}
+.donately-secure-header span{padding-left:1.5em;background-position:0px 0px;background-repeat:no-repeat;background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAMCAYAAACwXJejAAAAIUlEQVQY02NonjybAYr/Y8FgOXQFDFg0UVnRf0J4VNF/AGtWD2MTxoZrAAAAAElFTkSuQmCC);}
+.donately-secure-fields .donately-fields {width: 300px;}
+input#donately-card-number {width: 250px;}
+
+fieldset.donately-fields{border:none;margin:0 0 1.2em;padding:0;position:relative;}
+label.donately-label{font-size:.7em;font-weight:normal;color:#4f4f4f;margin-bottom:0.3em;display:block;line-height:normal;text-transform:uppercase;}
+input.donately-text-input{line-height:normal;height:auto;width:auto;font-family:inherit;margin:0;font-size:1.1em;padding:0.4em 0.5em;display:block;background-color:#fff;color:#333;position:relative;border:1px solid #ccc;border-top-color:#a0a0a0;border-right-color:#aaa;border-left-color:#aaa;box-shadow:inset 0 1px 2px rgba(0, 0, 0, 0.075);border-radius:3px;box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;}
+
+.donately-email-fields {float:left;}
+.donately-phone-fields {float:left;}
+
+.donately-donation-amount{float:left;width:100px;position:relative;}
+label.donately-dollar-sign{position:absolute;left:0.3em;top:0.43em;font-size:1.61em;font-weight:normal;color:#333;z-index:500;display:block;line-height:normal;}
+input#donately-amount{width:100px;font-size:1.5em;padding:0.4em 0.3em 0.4em 1em;}
+
+.donately-donation-frequency{float:left;width:190px;margin-top:-6px}
+.donately-radio-input{float:left;margin:0 8px 0 0;box-sizing:border-box;padding:0;}
+.donately-radio-option{padding-left:20px;}
+.donately-radio-option label{padding:12px 0 4px;margin:0 0 0 20px;}
+.donately-radio-option input{margin-top:12px;}
+.donately-radio-option:last-child label{padding:4px 0 12px;}
+.donately-radio-option:last-child input{margin-top:5px;}
+
+input#donately-card-number{padding-right:2.8em;background:#ffffff url("https://www.dntly.com/assets/js/v1/form/cc/generic.png") 210px center no-repeat;background-origin:border-box;}
+input#donately-card-number.donately-cc-visa{background-image:url("https://www.dntly.com/assets/js/v1/form/cc/visa.png");}
+input#donately-card-number.donately-cc-mastercard{background-image:url("https://www.dntly.com/assets/js/v1/form/cc/mastercard.png");}
+input#donately-card-number.donately-cc-amex{background-image:url("https://www.dntly.com/assets/js/v1/form/cc/amex.png");}
+input#donately-card-number.donately-cc-discover{background-image:url("https://www.dntly.com/assets/js/v1/form/cc/discover.png");}
+.donately-expiration-date{float:left;width:50%;position:relative;}
+.donately-expiration-date input{width:58px;}
+#donately-card-exp-month{float:left;margin-right:5px;}
+.donately-verification-number{float:left;width:50%;position:relative;}
+#donately-card-cvc{width:70px;}
+
+.donately-first-name-group,.donately-last-name-group{float:left;width:50%;box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;}
+.donately-first-name-group input,.donately-last-name-group input{width:100%;}
+.donately-first-name-group{padding-right:10px;}
+.donately-street-address-group input,.donately-street-address-2-group input{width:100%;}
+.donately-city-group,.donately-state-group{float:left;box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;}
+.donately-city-group input,.donately-state-group input,.donately-city-group select,.donately-state-group select{width:100%;}
+.donately-city-group{width:60%;padding-right:10px;}
+.donately-state-group{width:40%;}
+.donately-zip-code-group,.donately-country-group{float:left;box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;}
+.donately-zip-code-group input,.donately-country-group input,.donately-zip-code-group select,.donately-country-group select{width:100%;}
+.donately-zip-code-group{width:60%;padding-right:10px;}
+.donately-country-group{width:40%;}
+
+#donately-email{width:175px;}
+fieldset.donately-logged-out-fields{padding-right:10px;}
+
+#donately-phone-number{width:165px;}
+
+.donately-address-fields {width:300px;}
+
+.donately-btn{font-family:inherit;font-size:1.23em;margin:0;color:#fff;background-color:#666;padding:10px 20px;vertical-align:middle;border:1px solid #3279a0;border-radius:3px;box-shadow:0px 1px 0px rgba(0, 0, 0, 0.3);text-shadow:0px -1px 0px rgba(0, 0, 0, 0.3);text-decoration:none;background:#67B2DA;background:-moz-linear-gradient(top, #67b2da 0%, #2d89bb 5%, #126fa0 100%);background:-webkit-gradient(linear, left top, left bottom, color-stop(0%, #67b2da), color-stop(5%, #2d89bb), color-stop(100%, #126fa0));background:-webkit-linear-gradient(top, #67b2da 0%, #2d89bb 5%, #126fa0 100%);background:-o-linear-gradient(top, #67b2da 0%, #2d89bb 5%, #126fa0 100%);background:-ms-linear-gradient(top, #67b2da 0%, #2d89bb 5%, #126fa0 100%);background:linear-gradient(to bottom, #67b2da 0%, #2d89bb 5%, #126fa0 100%);filter:progid:dximagetransform.microsoft.gradient(startColorstr='#91cef2', endColorstr='#4680a4', GradientType=0);-webkit-appearance:button;cursor:pointer;}
+.donately-btn:hover{background:#126FA0;color:#fff;}
+
+fieldset.donately-logged-in-fields{height:11.25em;padding-top:1.92em;box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;}
+div.donately-logged-in-message{border:1px solid #d7dadd;padding:28px 20px 18px;background-color:#eff3f5;color:#303132;text-shadow:0px -1px 0px rgba(255, 255, 255, 0.8);border-radius:3px;box-shadow:inset 0px 1px 0px rgba(255, 255, 255, 0.4);}
+div.donately-logged-in-message a{display:block;padding:10px 0;}
+.donately-loading{height:24px;width:24px;background:url("https://www.dntly.com/assets/js/v1/form/loading.gif") 0px 0px no-repeat;margin-left:1em;display:inline-block;vertical-align:middle;}
+.donately-processing{border-color:#59a3cc;background:#90cbed;background:-moz-linear-gradient(top, #90cbed 0%, #71a6c4 100%);background:-webkit-gradient(linear, left top, left bottom, color-stop(0%, #90cbed), color-stop(100%, #71a6c4));background:-webkit-linear-gradient(top, #90cbed 0%, #71a6c4 100%);background:-o-linear-gradient(top, #90cbed 0%, #71a6c4 100%);background:-ms-linear-gradient(top, #90cbed 0%, #71a6c4 100%);background:linear-gradient(to bottom, #90cbed 0%, #71a6c4 100%);filter:progid:dximagetransform.microsoft.gradient(startColorstr='#90cbed', endColorstr='#71a6c4', GradientType=0);}
+input.donately-error{border:1px solid #ef7473;box-shadow:inset 0 1px 2px rgba(0, 0, 0, 0.075),0px 0px 4px #ef7473;}
+.donately-inline-error{color:#ef7473;display:block;position:absolute;bottom:-1.25em;}
+.donately-error-message-overlay{background-color:rgba(255, 255, 255, 0.5);position:absolute;top:0;right:0;bottom:0;left:0;z-index:1000;}
+#donately-error-message{position:absolute;background-color:#fff;padding:20px;top:40%;left:10%;right:10%;box-shadow:0px 0px 10px rgba(0, 0, 0, 0.5);}
+#donately-error-header{background-color:#e8ebed;text-transform:uppercase;color:#83939b;padding:1em 1.5em;margin-bottom:1em;box-shadow:inset 0px 1px 0px rgba(255, 255, 255, 0.3);}
+.donately-ssl-required{font-weight:normal;font-style:italic;color:red;}
+.donately-hide{display:none;}
+
