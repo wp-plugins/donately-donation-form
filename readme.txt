@@ -1,4 +1,4 @@
-=== Plugin Name ===
+=== Donately Donation Form ===
 Contributors: shanaver, brianburkett2k
 Tags: donations, donately, donate.ly, dntly, transactions, widget, stripe, authorize.net, non-profit
 Requires at least: 3.0.1
@@ -55,6 +55,9 @@ There are no monthly fees from Donately, but there is a small (under 2% average)
 
 = 1.0.2 =
 * Banner fix
+
+= 1.0.3 =
+* Title Change
 
 == Upgrade Notice ==
 
