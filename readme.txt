@@ -7,7 +7,7 @@ Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Non-profit groups can now take secure donations from any page on their site.  Include the widget in a sidebar or use the shortcode to drop it in a page or post.
+Simple, Secure Online Donation Form.
 
 == Description ==
 
@@ -50,5 +50,11 @@ There are no monthly fees from Donately, but there is a small (under 2% average)
 = 1.0.0 =
 * Initial Wordpress.com version
 
+= 1.0.1 =
+* Readme Tweaks
+
 == Upgrade Notice ==
+
+= 1.0.0 =
+Initial release
 
