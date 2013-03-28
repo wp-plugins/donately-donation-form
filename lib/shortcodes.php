@@ -25,7 +25,9 @@ function dntly_build_custom_form( $atts ){
 add_shortcode( 'dntly_300width_form', 'dntly_build_sidebar_form' );
 function dntly_build_sidebar_form($atts) {
 	extract(shortcode_atts(array(
+		'account' => null,
 		'campaign' => null,
+		'fundraiser' => null,
 		'css_url' => null, //DNTLY_PLUGIN_URL . 'lib/formjs-wide.css',
 		'address' => false,
 		'phone' => false,

@@ -59,6 +59,9 @@ There are no monthly fees from Donately, but there is a small (under 2% average)
 = 1.0.3 =
 * Title Change
 
+= 1.1.0 =
+* Add custom account & fundraiser IDs
+
 == Upgrade Notice ==
 
 = 1.0.0 =

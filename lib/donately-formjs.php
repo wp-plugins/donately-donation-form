@@ -4,9 +4,10 @@
 ?>
 <script class='donately-form' ></script>
 <script src='<?php print $form_js_url ?>'  
-  data-donately-id='<?php print $dntly->dntly_options['account_id'] ?>' 
+  data-donately-id='<?php print (isset($account)?$account:$dntly->dntly_options['account_id']) ?>' 
   data-donately-campaign-id='<?php print (isset($campaign)?$campaign:'0') ?>' 
-  data-donately-css-url='<?php print (isset($css_url)?$css_url:'0') ?>'
+  data-donately-fundraiser-id='<?php print (isset($fundraiser)?$fundraiser:'0') ?>' 
+  data-donately-css-url='<?php print (isset($css_url)?$css_url:'') ?>'
   data-donately-address='<?php print (isset($address)?(bool)$address:'false') ?>' 
   data-donately-phone='<?php print (isset($phone)?(bool)$phone:'false') ?>' 
 </script>
