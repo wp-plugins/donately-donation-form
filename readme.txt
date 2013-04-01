@@ -1,5 +1,5 @@
 === Donately Donation Form ===
-Contributors: shanaver, brianburkett2k
+Contributors: shanaver, bryanmonzon, brianburkett2k
 Tags: donations, donately, donate.ly, dntly, transactions, widget, stripe, authorize.net, non-profit
 Requires at least: 3.0.1
 Tested up to: 3.5.1
