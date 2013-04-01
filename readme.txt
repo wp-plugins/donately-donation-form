@@ -62,6 +62,9 @@ There are no monthly fees from Donately, but there is a small (under 2% average)
 = 1.1.0 =
 * Add custom account & fundraiser IDs
 
+= 1.2.0 =
+* Add more form.js options
+
 == Upgrade Notice ==
 
 = 1.0.0 =
