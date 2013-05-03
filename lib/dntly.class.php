@@ -29,6 +29,9 @@ class DNTLY_API {
 	var $suppress_logging			= false;
 		
 	function __construct() {
+		if(DNTLY_DEBUG){
+			$this->api_scheme['staging'] = 'http';$this->api_scheme['dev'] = 'http';$this->api_domain['staging'] = 'dntly-staging.com';$this->api_domain['dev'] = 'dntly.local:3000';
+		}
 		$this->dntly_options = get_option('dntly_options');
 		if( isset($this->dntly_options['account']) ){
 			$this->api_subdomain = ( $this->dntly_options['account'] != '' ? $this->dntly_options['account'] : 'www');

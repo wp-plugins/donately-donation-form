@@ -65,6 +65,9 @@ There are no monthly fees from Donately, but there is a small (under 2% average)
 = 1.2.0 =
 * Add more form.js options
 
+= 1.2.1 =
+* Add debug option for development testing
+
 == Upgrade Notice ==
 
 = 1.0.0 =

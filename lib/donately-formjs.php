@@ -1,6 +1,7 @@
 <?php
   $dntly = new DNTLY_API;
-  $form_js_url  = 'https://' . $dntly->api_subdomain . '.' . ( isset($dntly->dntly_options['environment']) ? $dntly->api_domain[$dntly->dntly_options['environment']] : $dntly->api_domain['production'] ) . '/assets/js/v1/form.js';
+  $form_js_url = ( isset($dntly->dntly_options['environment']) ? $dntly->api_scheme[$dntly->dntly_options['environment']] : $dntly->api_scheme['production'] ) . '://';
+  $form_js_url .= $dntly->api_subdomain . '.' . ( isset($dntly->dntly_options['environment']) ? $dntly->api_domain[$dntly->dntly_options['environment']] : $dntly->api_domain['production'] ) . '/assets/js/v1/form.js';
 ?>
 <script class='donately-form' ></script>
 <script src='<?php print $form_js_url ?>' type='text/javascript' async='async' 
@@ -18,8 +19,8 @@
 <script>
   jQuery(function() {
     jQuery('script').bind('donately.success', function(e, resp){
-      console.log('donately.success')
-      console.log(resp);
+      //console.log('donately.success')
+      //console.log(resp);
       <?php if( $dntly->dntly_options['thank_you_page'] != '' ): ?>
         setTimeout(function(){
           window.top.location.href = "<?php print $dntly->dntly_options['thank_you_page'] ?>";
