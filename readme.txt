@@ -68,6 +68,9 @@ There are no monthly fees from Donately, but there is a small (under 2% average)
 = 1.2.1 =
 * Add debug option for development testing
 
+= 1.2.2 =
+* Better alert on get_account error
+
 == Upgrade Notice ==
 
 = 1.0.0 =

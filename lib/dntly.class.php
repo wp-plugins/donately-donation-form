@@ -27,6 +27,7 @@ class DNTLY_API {
 	var $dntly_options 		    = array();
 	var $wordpress_upload_dir = null;
 	var $suppress_logging			= false;
+	var $remote_results				= null;
 		
 	function __construct() {
 		if(DNTLY_DEBUG){
@@ -144,25 +145,29 @@ class DNTLY_API {
 			$headers = array( 'sslverify' => false );	
 		}
 		if( $this->api_methods[$api_method][0] == "post" ){
-			$results = wp_remote_post($url, array('headers' => $headers, 'body' => $post_variables));
+			$this->remote_results = wp_remote_post($url, array('headers' => $headers, 'body' => $post_variables));
+			//$results = wp_remote_post($url, array('headers' => $headers, 'body' => $post_variables));
 		}
 		else{
 			if($post_variables){
 				$url .= '?'; foreach($post_variables as $var => $val){ $url .= $var . '=' . $val . '&'; }
 			}
-			$results = wp_remote_get($url, array('headers' => $headers));
+			$this->remote_results = wp_remote_get($url, array('headers' => $headers));
+			//$results = wp_remote_get($url, array('headers' => $headers));
 		}
-		if( is_object($results) ){
-			if( get_class($results) == 'WP_Error' ){
-				$this->return_json_error('Wordpress Error - ' . json_encode($results));
-				die();
+		if( is_object($this->remote_results) ){
+			if( get_class($this->remote_results) == 'WP_Error' ){
+				//$this->return_json_error('Wordpress Error - ' . json_encode($results));
+				return null;
+				//die();
 			}			
 		}
-		if($results['response']['code'] != '200'){
-			$this->return_json_error($results['response']['message']);
-			die();
+		if($this->remote_results['response']['code'] != '200'){
+			$this->return_json_error($this->remote_results['response']['message']);
+			return null;
+			//die();
 		}
-		return json_decode($results['body']);
+		return json_decode($this->remote_results['body']);
 	}
 
 	function convert_amount_in_cents_to_amount($amount_in_cents){
@@ -173,6 +178,9 @@ class DNTLY_API {
 	
 	function get_accounts(){
 		$accounts = $this->make_api_request("get_my_accounts");
+		if( !$accounts ){
+			print '<div class="updated" id="message"><p><strong>Error retrieving Donately accounts!</strong> - ' . print_r($this->remote_results, true) . '</p></div>';
+		}
 		return $accounts;
 	}
 	
