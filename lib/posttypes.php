@@ -1,6 +1,7 @@
 <?php
 
 function dntly_custom_post_types(){
+	$dntly_options = get_option('dntly_options');
 	register_post_type( 'dntly_campaigns',
 	    array(
 	        'labels' => array(
@@ -22,7 +23,8 @@ function dntly_custom_post_types(){
 	      'taxonomies' => array('category', 'post_tag', 'campaign_categories'),
 	      'rewrite' => array('slug' => "campaign"),
 	      'menu_position' => '25',
-	      'has_archive' => true
+	      'has_archive' => true,
+	      'show_in_menu' => ($dntly_options['dntly_campaign_posttype']=='dntly_campaigns'?true:false),
 	    )
 	);	
 	register_post_type( 'dntly_fundraisers',

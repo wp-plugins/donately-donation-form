@@ -66,7 +66,7 @@ class Dntly_Donation_Form_Sidebar extends WP_Widget {
 		$campaigns = new WP_Query(
 			array(
 			'posts_per_page'	=> 150,
-			'post_type'		    => 'dntly_campaigns',
+			'post_type'		    => $dntly->dntly_options['dntly_campaign_posttype'],
 			'post_status'     => array( 'publish' ),
 			'meta_query'      => array(
 				array(

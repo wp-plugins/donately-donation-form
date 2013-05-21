@@ -239,7 +239,7 @@ class DNTLY_API {
 		$post_exists = new WP_Query(
 			array(
 			'posts_per_page'	=> 1,
-			'post_type'		    => 'dntly_campaigns',
+			'post_type'		    => $this->dntly_options['dntly_campaign_posttype'],
 			'post_status'     => array( 'publish', 'private', 'draft', 'pending', 'future', 'pending'), // essentially match any not in the trash
 			'meta_query'      => array(
 				array(
@@ -259,7 +259,7 @@ class DNTLY_API {
 		}
 		else{
 			$post_params = array(
-				'post_type'		  => 'dntly_campaigns',
+				'post_type'		  => $this->dntly_options['dntly_campaign_posttype'],
 				'post_title'	  => $campaign->title,
 				'post_content'	=> $campaign->description,
 				'post_status'	  => ($this->dntly_options['sync_to_private']?'private':'publish'),

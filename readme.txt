@@ -71,6 +71,9 @@ There are no monthly fees from Donately, but there is a small (under 2% average)
 = 1.2.2 =
 * Better alert on get_account error
 
+= 1.2.3 =
+* Add option for using your own custom posttype instead of the default 'Dntly Campaigns'
+
 == Upgrade Notice ==
 
 = 1.0.0 =

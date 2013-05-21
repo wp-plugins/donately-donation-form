@@ -21,7 +21,7 @@ foreach($dntly_accounts as $a){
 	}
 }
 $campaign_post = new WP_Query( array(
-	'post_type' => 'dntly_campaigns',
+	'post_type' => $dntly->dntly_options['dntly_campaign_posttype'],
 	'meta_query' => array(
 		array(
 			'key' => '_dntly_id',

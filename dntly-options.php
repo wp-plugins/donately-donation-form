@@ -26,6 +26,7 @@ $dntly_console_debugger = isset($dntly_options['console_debugger']) ? $dntly_opt
 $dntly_console_calls = isset($dntly_options['console_calls']) ? $dntly_options['console_calls'] : "0";
 $dntly_thank_you_page = isset($dntly_options['thank_you_page']) ? $dntly_options['thank_you_page'] : null;
 $dntly_sync_to_private = isset($dntly_options['sync_to_private']) ? $dntly_options['sync_to_private'] : "0";
+$dntly_campaign_posttype = isset($dntly_options['dntly_campaign_posttype']) ? $dntly_options['dntly_campaign_posttype'] : "dntly_campaigns";
 
 if($token){
 	$dntly_accounts = dntly_get_accounts();
@@ -59,7 +60,14 @@ if($token){
 		$clean_title = (strlen($clean_title)>60?substr($clean_title,0,50).'...':$clean_title);
 		$thank_you_page_options .=	"<option value='{$p->ID}' ".selected($dntly_thank_you_page, $p->ID, false).">{$clean_title}</option>";
 	}
-
+	$excluded_posttypes = array('dntly_log_entries', 'dntly_fundraisers');
+	$post_types=get_post_types(array('public'=>true,'_builtin'=>false,'show_ui'=>true), 'objects');
+	$campaign_posttype_options = '';
+	foreach( $post_types as $p ){
+		if( in_array($p->name, $excluded_posttypes))
+			continue;
+		$campaign_posttype_options .=	"<option value='{$p->name}' ".selected($dntly_campaign_posttype, $p->name, false).">{$p->labels->name}</option>";
+	}
 }
 else{
 	$dntly_object = new DNTLY_API;
@@ -199,8 +207,17 @@ else{
 				</td>
 			</tr>
 			<tr>
+				<th><label for="category_base">Donately Campaign Posttype</label></th>
+				<td class="col1"><a href="#" class="tooltip"><span>Use the default 'Dntly Campaigns' posttype - or your own</span></a></td>
+				<td class="col2">
+					<select name="dntly_options[dntly_campaign_posttype]" id="dntly-posttype">
+						<?php print $campaign_posttype_options ?>
+					</select> 
+				</td>
+			</tr>
+			<tr>
 				<th><label for="category_base">Donation Thank You Page</label></th>
-				<td class="col1"><a href="#" class="tooltip"><span>Must be a top level page (no parent)</span></a></td>
+				<td class="col1"><a href="#" class="tooltip"><span>Must be a top level page (i.e. not have parent)</span></a></td>
 				<td class="col2">
 					<select name="dntly_options[thank_you_page]" id="dntly-account">
 						<option value="">-- none --</option>

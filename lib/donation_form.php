@@ -27,7 +27,7 @@
 		$campaign_post = new WP_Query(array(
 			'meta_key'		=> '_dntly_id',
 			'meta_value'	=> $campaign_id,
-			'post_type'		=> 'dntly_campaigns',
+			'post_type'		=> $dntly->dntly_options['dntly_campaign_posttype'],
 			'post_status'	=> array('publish', 'private')
 		));
 		if( isset($campaign_post->posts) ){
