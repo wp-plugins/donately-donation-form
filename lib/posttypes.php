@@ -2,6 +2,8 @@
 
 function dntly_custom_post_types(){
 	$dntly_options = get_option('dntly_options');
+	if( !isset($dntly_options['dntly_get_fundraisers']) ){$dntly_options['dntly_get_fundraisers'] = '0';}
+	if( !isset($dntly_options['dntly_campaign_posttype']) ){$dntly_options['dntly_campaign_posttype'] = '0';}
 	register_post_type( 'dntly_campaigns',
 	    array(
 	        'labels' => array(
@@ -48,7 +50,7 @@ function dntly_custom_post_types(){
 	      'taxonomies' => array('category', 'post_tag'),
 	      'rewrite' => array("slug" => "fundraiser"),
 	      'menu_position' => '26',
-	      'show_in_menu' => false,
+	      'show_in_menu' => ($dntly_options['dntly_get_fundraisers'] == '1'?true:false),
 	    )
 	);
 	register_post_type( 'dntly_log_entries',
@@ -105,13 +107,14 @@ function dntly_add_column_fundraisers($posts_columns, $post_type) {
 
 add_action('manage_dntly_fundraisers_posts_custom_column', 'dntly_display_column_fundraisers', 10, 2);
 function dntly_display_column_fundraisers($column_name, $post_id) {
+	global $dntly_options;
 	if ('environment' == $column_name) {
 		print ucwords(get_post_meta( $post_id, '_dntly_environment', true ));
 	}
 	if ('campaign' == $column_name) {
 		$c = get_post_meta( $post_id, '_dntly_campaign_id', true );
 		$campaign_post = new WP_Query( array(
-			'post_type' => 'dntly_campaigns',
+			'post_type' => $dntly_options['dntly_campaign_posttype'],
 			'meta_query' => array(
 				array(
 					'key' => '_dntly_id',
@@ -119,7 +122,13 @@ function dntly_display_column_fundraisers($column_name, $post_id) {
 				)
 			)
 		) );
-		print $campaign_post->posts[0]->post_title;
+		if( isset($campaign_post->posts[0]) ){
+			print $campaign_post->posts[0]->post_title;	
+		}
+		else{
+			print "unknown";
+		}
+		
 	}	
 }
 

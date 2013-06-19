@@ -1,13 +1,13 @@
 <?php
 
 /*
-Plugin Name:  Dntly
+Plugin Name:  Donately Integration
 Plugin URI:   http://www.donately.com
 Description:  API Integration with the Donately donation platform
-Version:      1.2.3
+Version:      2.0.0
 Author:       5ifty&5ifty
 Author URI:   https://www.fiftyandfifty.org/
-Contributors: shanaver, bryanmonzon, brianburkett2k
+Contributors: shanaver, bryanmonzon, elzizzo
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -17,7 +17,7 @@ Neither the name of Alex Moss or pleer nor the names of its contributors may be 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-define('DNTLY_VERSION', '1.2.3');
+define('DNTLY_VERSION', '2.0.0');
 
 /* set to true for testing/debugging in development & staging environments */
 define('DNTLY_DEBUG', true);
@@ -35,27 +35,18 @@ require_once( DNTLY_PLUGIN_PATH . '/lib/widgets.php');
 
 // admin styles & scripts
 function dntly_admin_scripts_styles(){
-	wp_register_script( 'dntly-scripts', DNTLY_PLUGIN_URL . 'lib/dntly.js' ) ;
-	wp_register_script( 'base64', DNTLY_PLUGIN_URL . 'lib/base64.js' ) ;	
-	
-	wp_register_style( 'dntly-style', DNTLY_PLUGIN_URL . 'lib/dntly.css' );
-	
+	wp_register_script( 'dntly-scripts', DNTLY_PLUGIN_URL . 'lib/dntly-back.js', array('jquery') );
 	wp_enqueue_script( 'dntly-scripts' );
-	wp_enqueue_script( 'base64' );
-	
+	wp_register_style( 'dntly-style', DNTLY_PLUGIN_URL . 'lib/dntly.css' );
 	wp_enqueue_style( 'dntly-style' );
 }
 add_action('admin_init', 'dntly_admin_scripts_styles');
 
 // front end styles & scripts
 function dntly_front_scripts_styles(){
-	wp_register_script( 'jquery', '/wp-includes/js/jquery/jquery.js' );
-	wp_register_script( 'jquery-validate', DNTLY_PLUGIN_URL . 'lib/jquery.validate.min.js', array('jquery') );
-	wp_register_script( 'jquery-base64', DNTLY_PLUGIN_URL . 'lib/base64.js', array('jquery') );
-
-	wp_enqueue_script( 'jquery' );
-	wp_enqueue_script( 'jquery-validate' );
-	wp_enqueue_script( 'jquery-base64' );
+	wp_register_script( 'dntly-scripts', DNTLY_PLUGIN_URL . 'lib/dntly-front.js', array('jquery') );
+	wp_localize_script( 'dntly-scripts', 'dntly_ajax', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
+	wp_enqueue_script( 'dntly-scripts' );
 }
 add_action('wp_enqueue_scripts', 'dntly_front_scripts_styles');
 
@@ -91,12 +82,16 @@ add_filter( 'http_request_timeout', 'dntly_timeout_request_time' );
 
 /*  Cron Functions  */
 
-add_filter( 'cron_schedules', 'dntly_corn_schedules');
-function dntly_corn_schedules(){
+add_filter( 'cron_schedules', 'dntly_cron_schedules');
+function dntly_cron_schedules(){
 	return array(
-		'every_fifteen_minute' => array(
+		'every_fifteen_minutes' => array(
 			'interval' => 60 * 15,
 			'display' => 'Four Times Hourly'
+		),
+		'every_thirty_minutes' => array(
+			'interval' => 60 * 30,
+			'display' => 'Twice Hourly'
 		),
 	);
 }
@@ -104,15 +99,21 @@ function dntly_corn_schedules(){
 // function for syncing everything
 function dntly_sync_everything() {
 	dntly_get_campaigns();
-	//dntly_get_fundraisers();
+	dntly_get_fundraisers();
 }
 add_action('dntly_syncing_cron', 'dntly_sync_everything');
 
 // function for adding the syncing everything cron
-function dntly_activate_cron_syncing() {
+function dntly_activate_cron_syncing($cron) {
 	if( !wp_get_schedule('dntly_syncing_cron') ){
-		dntly_transaction_logging('Donately Plugin - start hourly scheduler');
-		wp_schedule_event(time(), 'hourly', 'dntly_syncing_cron');
+		if($cron == 'cron30'){
+			wp_schedule_event(time(), 'every_thirty_minutes', 'dntly_syncing_cron');
+			dntly_transaction_logging('Donately Plugin - start hourly scheduler - 30 minutes');
+		}
+		else{
+			wp_schedule_event(time(), 'hourly', 'dntly_syncing_cron');
+			dntly_transaction_logging('Donately Plugin - start hourly scheduler - 60 minutes');
+		}
 	}
 }
 

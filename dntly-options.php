@@ -27,6 +27,10 @@ $dntly_console_calls = isset($dntly_options['console_calls']) ? $dntly_options['
 $dntly_thank_you_page = isset($dntly_options['thank_you_page']) ? $dntly_options['thank_you_page'] : null;
 $dntly_sync_to_private = isset($dntly_options['sync_to_private']) ? $dntly_options['sync_to_private'] : "0";
 $dntly_campaign_posttype = isset($dntly_options['dntly_campaign_posttype']) ? $dntly_options['dntly_campaign_posttype'] : "dntly_campaigns";
+$dntly_get_fundraisers = isset($dntly_options['dntly_get_fundraisers']) ? $dntly_options['dntly_get_fundraisers'] : "0";
+$dntly_fundraiser_sync_to_private = isset($dntly_options['fundraiser_sync_to_private']) ? $dntly_options['fundraiser_sync_to_private'] : "0";
+$dntly_fundraiser_posttype = isset($dntly_options['dntly_fundraiser_posttype']) ? $dntly_options['dntly_fundraiser_posttype'] : "dntly_fundraisers";
+$show_debugging = ( isset($dntly_options['show_debugging']) && DNTLY_DEBUG ) ? $dntly_options['show_debugging'] : "0";
 
 if($token){
 	$dntly_accounts = dntly_get_accounts();
@@ -60,13 +64,20 @@ if($token){
 		$clean_title = (strlen($clean_title)>60?substr($clean_title,0,50).'...':$clean_title);
 		$thank_you_page_options .=	"<option value='{$p->ID}' ".selected($dntly_thank_you_page, $p->ID, false).">{$clean_title}</option>";
 	}
-	$excluded_posttypes = array('dntly_log_entries', 'dntly_fundraisers');
+	$excluded_posttypes = array('dntly_log_entries', 'dntly_fundraisers', 'ccpurge_log_entries');
 	$post_types=get_post_types(array('public'=>true,'_builtin'=>false,'show_ui'=>true), 'objects');
 	$campaign_posttype_options = '';
 	foreach( $post_types as $p ){
 		if( in_array($p->name, $excluded_posttypes))
 			continue;
 		$campaign_posttype_options .=	"<option value='{$p->name}' ".selected($dntly_campaign_posttype, $p->name, false).">{$p->labels->name}</option>";
+	}
+	$excluded_posttypes = array('dntly_log_entries', 'dntly_campaigns', 'ccpurge_log_entries');
+	$fundraiser_posttype_options = '';
+	foreach( $post_types as $p ){
+		if( in_array($p->name, $excluded_posttypes))
+			continue;
+		$fundraiser_posttype_options .=	"<option value='{$p->name}' ".selected($dntly_fundraiser_posttype, $p->name, false).">{$p->labels->name}</option>";
 	}
 }
 else{
@@ -83,14 +94,41 @@ else{
 	
 }
 
-if($token && $dntly_syncing == 'cron'){
-	dntly_activate_cron_syncing();
+if($token && stristr($dntly_syncing, 'cron') ){
+	dntly_activate_cron_syncing($dntly_syncing);
 }
 else{
 	dntly_deactivate_cron_syncing();
 }
 
 ?>
+
+<script>
+	function show_hide_debug(){
+		var show;
+		if( jQuery('input[name="dntly_options[show_debugging]"]:checked').val() == '1' ){ show = true; }
+		else{ show = false; }
+		if( show ){ jQuery('.debugging-block').show(); }
+		else{ jQuery('.debugging-block').hide(); }
+	}
+	function show_hide_fundraisers(){
+		var show;
+		if( jQuery('input[name="dntly_options[dntly_get_fundraisers]"]:checked').val() == '1' ){ show = true; }
+		else{ show = false; }
+		if( show ){ jQuery('.fundraiser-block').show(); }
+		else{ jQuery('.fundraiser-block').hide(); }
+	}	
+	jQuery(document).ready(function($){
+		show_hide_debug();
+		show_hide_fundraisers();
+		jQuery('input[name="dntly_options[show_debugging]"]').change(function() {
+			show_hide_debug();
+		});
+		jQuery('input[name="dntly_options[dntly_get_fundraisers]"]').change(function() {
+			show_hide_fundraisers();
+		});
+	});
+</script>
 
 <div class="wrap">
 	<div class="icon32" id="icon-options-general"><br></div><h2>Donately API Integration</h2>
@@ -194,9 +232,14 @@ else{
 				<td class="col2">
 					<select name="dntly_options[syncing]" id="dntly-account">
 						<option value="manual" <?php selected( $dntly_syncing, 'manual' ); ?>>Manual Syncing</option>    
-						<option value="cron" <?php selected( $dntly_syncing, 'cron' ); ?>>Automated Syncing (60 mins)</option>
+						<option value="cron60" <?php selected( $dntly_syncing, 'cron60' ); ?>>Automated Syncing (every 60 mins)</option>
+						<option value="cron30" <?php selected( $dntly_syncing, 'cron30' ); ?>>Automated Syncing (every 30 mins)</option>
 					</select> <br />
 				</td>
+			</tr>
+			<tr>
+				<th><hr /></th>
+				<td colspan="2"><hr /></td>
 			</tr>
 			<tr>
 				<th><label for="category_base">Import Donately Campaigns</label></th>
@@ -216,16 +259,60 @@ else{
 				</td>
 			</tr>
 			<tr>
-				<th><label for="category_base">Donation Thank You Page</label></th>
-				<td class="col1"><a href="#" class="tooltip"><span>Must be a top level page (i.e. not have parent)</span></a></td>
+				<th><hr /></th>
+				<td colspan="2"><hr /></td>
+			</tr>
+			<tr>
+				<th><label for="category_base">Donately Fundraisers</label></th>
+				<td class="col1"></td>
 				<td class="col2">
-					<select name="dntly_options[thank_you_page]" id="dntly-account">
-						<option value="">-- none --</option>
-						<?php print $thank_you_page_options ?>
-					</select> <br />
+					<input type="radio" name="dntly_options[dntly_get_fundraisers]" value="1" <?php checked( $dntly_get_fundraisers, '1' ); ?>/> Sync Donately Fundraisers
+					<span style="width:40px;height:10px;display:inline-block"></span> 
+					<input type="radio" name="dntly_options[dntly_get_fundraisers]" value="0" <?php checked( $dntly_get_fundraisers, '0' ); ?>/> Ignore Donately Fundraisers 
+				</td>
+			</tr>		
+			<tr class="fundraiser-block">
+				<th><label for="category_base">Import Donately Fundraisers</label></th>
+				<td class="col1"></td>
+				<td class="col2">
+					<input type=radio name="dntly_options[fundraiser_sync_to_private]"  value="1" <?php checked( "1", $dntly_fundraiser_sync_to_private); ?>> as Private<br />
+					<input type=radio name="dntly_options[fundraiser_sync_to_private]"  value="0" <?php checked( "0", $dntly_fundraiser_sync_to_private); ?>> as Public<br />
+				</td>
+			</tr>
+			<tr class="fundraiser-block">
+				<th><label for="category_base">Donately Fundraiser Posttype</label></th>
+				<td class="col1"><a href="#" class="tooltip"><span>Use the default 'Dntly Fundraisers' posttype - or your own</span></a></td>
+				<td class="col2">
+					<select name="dntly_options[dntly_fundraiser_posttype]" id="dntly-posttype">
+						<?php print $fundraiser_posttype_options ?>
+					</select> 
 				</td>
 			</tr>
 			<tr>
+				<th><hr /></th>
+				<td colspan="2"><hr /></td>
+			</tr>
+			<tr>
+				<th><label for="category_base">Donation Thank You Page</label></th>
+				<td class="col1"><a href="#" class="tooltip"><span>Choose a page to redirect the user to after a successful donation.<br/>Must be a top level page (i.e. not have parent)</span></a></td>
+				<td class="col2">
+					<select name="dntly_options[thank_you_page]" id="dntly-account">
+						<option value="">-- Do not redirect after donation --</option>
+						<?php print $thank_you_page_options ?>
+					</select> <br />
+				</td>
+			</tr -->
+			<?php if(DNTLY_DEBUG): ?>
+			<tr>
+				<th><label for="category_base">Debugging</label></th>
+				<td class="col1"></td>
+				<td class="col2">
+					<input type="radio" name="dntly_options[show_debugging]" value="1" <?php checked( $show_debugging, '1' ); ?>/> Show Debugging Sections
+					<span style="width:40px;height:10px;display:inline-block"></span> 
+					<input type="radio" name="dntly_options[show_debugging]" value="0" <?php checked( $show_debugging, '0' ); ?>/> Hide Debugging Sections 
+				</td>
+			</tr>		
+			<tr class="debugging-block">
 				<th><label for="category_base">Options</label></th>
 				<td class="col1"></td>
 				<td class="col2">
@@ -234,6 +321,7 @@ else{
 					<input type=checkbox name="dntly_options[console_calls]"  value="1" <?php checked( "1", $dntly_console_calls); ?>> API calls to console (debug)<br />
 				</td>
 			</tr>
+		<?php endif; ?>
 			<tr>
 				<th>&nbsp;</th>
 				<td class="col1"></td>
@@ -251,6 +339,10 @@ else{
 					</td>
 				</tr>	
 			<?php endif; ?>
+				<tr class="debugging-block">
+					<th><hr /></th>
+					<td colspan="2"><hr /></td>
+				</tr>
 			</tbody>
 		</table>	
 	</form>
@@ -264,7 +356,7 @@ else{
 					<td class="col1"></td>
 					<td class="col2">
 						<input type="button" value="Sync Campaigns" id="dntly-sync-campaigns" class="button-primary"/> 
-						<!-- input type="button" value="Sync Fundraisers" id="dntly-sync-fundraisers" class="button-primary"/ -->
+						<input type="button" value="Sync Fundraisers" id="dntly-sync-fundraisers" class="button-primary fundraiser-block" />
 					</td>
 				</tr>
 			</table>
@@ -274,7 +366,7 @@ else{
 	
 	<div id="spinner"></div>
 	
-	<div id="dntly_table_logging_container">
+	<div id="dntly_table_logging_container" class="debugging-block">
 		<div id="dntly_table_logging"></div>
 	</div>	
 

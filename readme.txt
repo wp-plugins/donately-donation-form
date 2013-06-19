@@ -74,6 +74,12 @@ There are no monthly fees from Donately, but there is a small (under 2% average)
 = 1.2.3 =
 * Add option for using your own custom posttype instead of the default 'Dntly Campaigns'
 
+= 2.0.0 =
+* Add ability to sync Donately Fundraisers to wordpress
+* Add option for using your own custom posttype instead of the default 'Dntly Fundraisers'
+* Add another sync option (30 minutes & 60 minutes now available)
+* Add logging to settings page & include options to hide all debugging settings (note: must set DNTLY_DEBUG=true in dntly.php)
+
 == Upgrade Notice ==
 
 = 1.0.0 =

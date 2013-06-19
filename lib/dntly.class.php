@@ -44,19 +44,20 @@ class DNTLY_API {
 	
 	function build_api_methods(){
 		$this->api_methods = array(
-			"root"		            =>  array("get",  ""),
-			"get_session_token"		=>  array("post", "sessions"),
-			"donate_without_auth"	=>  array("post", "accounts/" . $this->dntly_account_id . "/donate_without_auth"),		
-			"create_fundraiser"		=>  array("post", "fundraisers"),
-			"create_person"       =>  array("post", "people"),
-			"person_exists"       =>  array("get",  "public/people/exists"),
-			"get_my_accounts"			=>  array("get",  "accounts"),
-			"get_person"          =>  array("get",  "admin/people" . ( $this->api_runtime_id ? '/' . $this->api_runtime_id : '' )),
-			"get_all_accounts"		=>  array("get",  "public/accounts"),
-			"get_campaigns"       =>  array("get",  "admin/campaigns"),
-			"get_fundraisers"     =>  array("get",  "admin/fundraisers"),
-			"get_donations"       =>  array("get",  "admin/donations"),
-			"get_events"          =>  array("get",  "admin/events"),	
+			"root"		            				=>  array("get",  ""),
+			"get_session_token"						=>  array("post", "sessions"),
+			"donate_without_auth"					=>  array("post", "accounts/" . $this->dntly_account_id . "/donate_without_auth"),		
+			"create_fundraiser"						=>  array("post", "fundraisers"),
+			"create_user_and_fundraiser"	=>  array("post", "people/create_person_and_fundraiser"),
+			"create_person"       				=>  array("post", "people"),
+			"person_exists"       				=>  array("get",  "public/people/exists"),
+			"get_my_accounts"							=>  array("get",  "accounts"),
+			"get_person"          				=>  array("get",  "admin/people" . ( $this->api_runtime_id ? '/' . $this->api_runtime_id : '' )),
+			"get_all_accounts"						=>  array("get",  "public/accounts"),
+			"get_campaigns"       				=>  array("get",  "admin/campaigns"),
+			"get_fundraisers"     				=>  array("get",  "admin/fundraisers"),
+			"get_donations"       				=>  array("get",  "admin/donations"),
+			"get_events"          				=>  array("get",  "admin/events"),	
 		);
 	}
 	
@@ -96,7 +97,7 @@ class DNTLY_API {
       foreach ($array as $name=>$value) {
          $name = strtolower(trim($name));
          if (!empty($name)) {
-            $object->$name = $this->array_to_object(stripslashes($value));
+            $object->$name = $this->array_to_object($value);
          }
       }
       return $object;
@@ -400,8 +401,7 @@ class DNTLY_API {
 
 	function create_fundraiser(){
 		$this->suppress_logging = true;
-		$post_object = $this->array_to_object($_POST['dntly_result']);
-		$dntly_result = json_decode($post_object);
+		$dntly_result = $this->array_to_object($_POST['dntly_result']);
 		if( $dntly_result->success ){
 			if( isset($dntly_result->fundraiser->id) ){
 				$post_id = $this->add_update_fundraiser($dntly_result->fundraiser, $this->dntly_account_id);

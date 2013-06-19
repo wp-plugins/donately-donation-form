@@ -59,6 +59,9 @@ class Dntly_Donation_Form_Sidebar extends WP_Widget {
 		if ( isset( $instance[ 'css_url' ] ) ) { $css_url = $instance[ 'css_url' ]; }else{ $css_url = null; }
 		$address = isset( $instance['address'] ) ? (bool) $instance['address'] : false;
 		$phone = isset( $instance['phone'] ) ? (bool) $instance['phone'] : false;
+		$iframe_height = isset( $instance['iframe_height'] ) ? $instance['iframe_height'] : null;
+		$iframe_width = isset( $instance['iframe_width'] ) ? $instance['iframe_width'] : null;
+		$comment = isset( $instance['comment'] ) ? (bool) $instance['comment'] : false;
 
 		$dntly = new DNTLY_API;
 		$account = $dntly->dntly_options['account'] . '.dntly.com';
@@ -97,13 +100,27 @@ class Dntly_Donation_Form_Sidebar extends WP_Widget {
 			<label for="<?php echo $this->get_field_id( 'css_url' ); ?>"><?php _e( 'Custom CSS URL:' ); ?></label> 
 			<input class="widefat" type="text" name="<?php echo $this->get_field_name( 'css_url' ); ?>" value="<?php echo esc_attr( $css_url ); ?>" />
 		</p>
-		<p>
+		<p style="display:block;clear:both">
+			<div style="width:100px;float:left">
+				<label for="<?php echo $this->get_field_id( 'iframe_width' ); ?>"><?php _e( 'Custom Width:' ); ?></label> 
+				<input type="text" name="<?php echo $this->get_field_name( 'iframe_width' ); ?>" value="<?php echo esc_attr( $iframe_width ); ?>" style="width:100px" />
+			</div>
+			<div style="width:100px;float:right">
+				<label for="<?php echo $this->get_field_id( 'iframe_height' ); ?>"><?php _e( 'Custom Height:' ); ?></label> 
+				<input type="text" name="<?php echo $this->get_field_name( 'iframe_height' ); ?>" value="<?php echo esc_attr( $iframe_height ); ?>" style="width:100px"/>
+			</div>
+		</p>		
+		<p style="display:block;clear:both;padding-top:10px">
 			<input class="checkbox" type="checkbox" <?php checked( $address ); ?> id="<?php echo $this->get_field_id( 'address' ); ?>" name="<?php echo $this->get_field_name( 'address' ); ?>" />
 			<label for="<?php echo $this->get_field_id( 'address' ); ?>"><?php _e( 'Display Address Fields?' ); ?></label>
 		</p>
 		<p>
 			<input class="checkbox" type="checkbox" <?php checked( $phone ); ?> id="<?php echo $this->get_field_id( 'phone' ); ?>" name="<?php echo $this->get_field_name( 'phone' ); ?>" />
 			<label for="<?php echo $this->get_field_id( 'phone' ); ?>"><?php _e( 'Display Phone Field?' ); ?></label>
+		</p>
+		<p>
+			<input class="checkbox" type="checkbox" <?php checked( $comments ); ?> id="<?php echo $this->get_field_id( 'comment' ); ?>" name="<?php echo $this->get_field_name( 'comment' ); ?>" />
+			<label for="<?php echo $this->get_field_id( 'comment' ); ?>"><?php _e( 'Display Comments Field?' ); ?></label>
 		</p>
 		<?php 
 	}

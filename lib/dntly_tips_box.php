@@ -17,13 +17,9 @@
 		<table>
 			<tr><th>Shortcode</th><th>Donation</th></tr>
 			<tr><td colspan="2"><strong>iFrame <span style="font-size:.8em">(no SSL needed)</span></strong></td></tr>
-			<tr><td>[dntly_iframe]</td><td>General</td></tr>
-			<tr><td>[dntly_iframe cid=123]</td><td>Campaign</td></tr>
-			<tr><td>[dntly_iframe cid=123 fid=123]</td><td>Fundraiser</td></tr>
-		</table>
-		<table>
-			<tr><td colspan="2"><strong>Custom <span style="font-size:.8em">(SSL needed)</span></strong></td></tr>
-			<tr><td colspan="2"><strong>* Coming Soon *</strong></td></tr>
+			<tr><td>[dntly_300width_form]</td><td>General</td></tr>
+			<tr><td>[dntly_300width_form cid=123]</td><td>Campaign</td></tr>
+			<tr><td>[dntly_300width_form cid=123 fid=123]</td><td>Fundraiser</td></tr>
 		</table>
 	<?php endif; ?>	
 	</div>
