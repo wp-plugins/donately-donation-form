@@ -83,6 +83,9 @@ There are no monthly fees from Donately, but there is a small (under 2% average)
 = 2.0.1 =
 * Backwards compatibility fix for pre PHP 5.3 - thanks BShurilla09
 
+= 2.0.2 =
+* Hide Debugging Switch
+
 == Upgrade Notice ==
 
 = 1.0.0 =
