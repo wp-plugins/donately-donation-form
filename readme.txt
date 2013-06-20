@@ -86,6 +86,9 @@ There are no monthly fees from Donately, but there is a small (under 2% average)
 = 2.0.2 =
 * Hide Debugging Switch
 
+= 2.0.3 =
+* sniff for indefined constant
+
 == Upgrade Notice ==
 
 = 1.0.0 =
