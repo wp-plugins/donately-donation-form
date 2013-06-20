@@ -23,7 +23,7 @@ define('DNTLY_VERSION', '2.0.0');
 define('DNTLY_DEBUG', true);
 
 define('DNTLY_PLUGIN_URL', plugin_dir_url( __FILE__ ));
-define('DNTLY_PLUGIN_PATH', __DIR__ );
+define('DNTLY_PLUGIN_PATH', plugin_dir_path(__FILE__) );
 define('DNTLY_PLUGIN_BASENAME', plugin_basename(__FILE__));
 
 require_once( DNTLY_PLUGIN_PATH . '/lib/posttypes.php');

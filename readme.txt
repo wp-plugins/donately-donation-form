@@ -80,6 +80,9 @@ There are no monthly fees from Donately, but there is a small (under 2% average)
 * Add another sync option (30 minutes & 60 minutes now available)
 * Add logging to settings page & include options to hide all debugging settings (note: must set DNTLY_DEBUG=true in dntly.php)
 
+= 2.0.1 =
+* Backwards compatibility fix for pre PHP 5.3 - thanks BShurilla09
+
 == Upgrade Notice ==
 
 = 1.0.0 =
