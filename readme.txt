@@ -89,6 +89,9 @@ There are no monthly fees from Donately, but there is a small (under 2% average)
 = 2.0.3 =
 * sniff for indefined constant
 
+= 2.0.4 =
+* fix widget bug
+
 == Upgrade Notice ==
 
 = 1.0.0 =

@@ -119,7 +119,7 @@ class Dntly_Donation_Form_Sidebar extends WP_Widget {
 			<label for="<?php echo $this->get_field_id( 'phone' ); ?>"><?php _e( 'Display Phone Field?' ); ?></label>
 		</p>
 		<p>
-			<input class="checkbox" type="checkbox" <?php checked( $comments ); ?> id="<?php echo $this->get_field_id( 'comment' ); ?>" name="<?php echo $this->get_field_name( 'comment' ); ?>" />
+			<input class="checkbox" type="checkbox" <?php checked( $comment ); ?> id="<?php echo $this->get_field_id( 'comment' ); ?>" name="<?php echo $this->get_field_name( 'comment' ); ?>" />
 			<label for="<?php echo $this->get_field_id( 'comment' ); ?>"><?php _e( 'Display Comments Field?' ); ?></label>
 		</p>
 		<?php 
