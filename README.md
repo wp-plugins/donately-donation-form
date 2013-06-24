@@ -9,5 +9,5 @@
 **Usage**
 
 * Drop the donation form widget into any page or post sidebar.
-* Using the shortcode [dntly_300width_form], drop a donation form into any page or post.
+* Using the shortcode [dntly_formjs], drop a donation form into any page or post.
 * Sync your Campaigns using the 'Sync Campaigns' button on the settings page.

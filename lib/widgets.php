@@ -57,14 +57,17 @@ class Dntly_Donation_Form_Sidebar extends WP_Widget {
 	public function form( $instance ) {
 		if ( isset( $instance[ 'campaign' ] ) ) { $campaign = $instance[ 'campaign' ]; }else{ $campaign = 0; }
 		if ( isset( $instance[ 'css_url' ] ) ) { $css_url = $instance[ 'css_url' ]; }else{ $css_url = null; }
-		$address = isset( $instance['address'] ) ? (bool) $instance['address'] : false;
-		$phone = isset( $instance['phone'] ) ? (bool) $instance['phone'] : false;
-		$iframe_height = isset( $instance['iframe_height'] ) ? $instance['iframe_height'] : null;
-		$iframe_width = isset( $instance['iframe_width'] ) ? $instance['iframe_width'] : null;
-		$comment = isset( $instance['comment'] ) ? (bool) $instance['comment'] : false;
+		$address 					= isset( $instance['address'] ) ? (bool) $instance['address'] : false;
+		$phone 						= isset( $instance['phone'] ) ? (bool) $instance['phone'] : false;
+		$iframe_height 		= isset( $instance['iframe_height'] ) ? $instance['iframe_height'] : null;
+		$iframe_width 		= isset( $instance['iframe_width'] ) ? $instance['iframe_width'] : null;
+		$comment 					= isset( $instance['comment'] ) ? (bool) $instance['comment'] : false;
+		$anonymous 				= isset( $instance['anonymous'] ) ? (bool) $instance['anonymous'] : false;
+		$onbehalf 				= isset( $instance['onbehalf'] ) ? (bool) $instance['onbehalf'] : false;
+		$tracking_codes 	= isset( $instance['tracking_codes'] ) ? $instance['tracking_codes'] : null;
 
-		$dntly = new DNTLY_API;
-		$account = $dntly->dntly_options['account'] . '.dntly.com';
+		$dntly 		= new DNTLY_API;
+		$Account 	= $dntly->dntly_options['account'] . '.dntly.com';
 
 		$campaigns = new WP_Query(
 			array(
@@ -120,7 +123,19 @@ class Dntly_Donation_Form_Sidebar extends WP_Widget {
 		</p>
 		<p>
 			<input class="checkbox" type="checkbox" <?php checked( $comment ); ?> id="<?php echo $this->get_field_id( 'comment' ); ?>" name="<?php echo $this->get_field_name( 'comment' ); ?>" />
-			<label for="<?php echo $this->get_field_id( 'comment' ); ?>"><?php _e( 'Display Comments Field?' ); ?></label>
+			<label for="<?php echo $this->get_field_id( 'comment' ); ?>"><?php _e( 'Display Comment Field?' ); ?></label>
+		</p>
+		<p>
+			<input class="checkbox" type="checkbox" <?php checked( $anonymous ); ?> id="<?php echo $this->get_field_id( 'anonymous' ); ?>" name="<?php echo $this->get_field_name( 'anonymous' ); ?>" />
+			<label for="<?php echo $this->get_field_id( 'anonymous' ); ?>"><?php _e( 'Display Anonymous Option?' ); ?></label>
+		</p>
+		<p>
+			<input class="checkbox" type="checkbox" <?php checked( $onbehalf ); ?> id="<?php echo $this->get_field_id( 'onbehalf' ); ?>" name="<?php echo $this->get_field_name( 'onbehalf' ); ?>" />
+			<label for="<?php echo $this->get_field_id( 'onbehalf' ); ?>"><?php _e( 'Display On Behalf Of Option?' ); ?></label>
+		</p>		
+		<p>
+			<label for="<?php echo $this->get_field_id( 'tracking_codes' ); ?>"><?php _e( 'Tracking Codes (optional)' ); ?></label> 
+			<input class="widefat" type="text" name="<?php echo $this->get_field_name( 'tracking_codes' ); ?>" value="<?php echo esc_attr( $tracking_codes ); ?>" />
 		</p>
 		<?php 
 	}

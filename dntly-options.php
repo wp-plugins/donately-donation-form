@@ -51,33 +51,20 @@ if($token){
 		$dntly_options_post['account_id']    = $dntly_accounts[0]->id;
 		update_option('dntly_options', $dntly_options_post);
 	}
-	$existing_pages = new WP_Query( array(
-		'post_type' => 'page',
-		'order' => 'ASC',
-		'orderby' => 'title',
-		'post_parent' => 0,
-		'posts_per_page' => 100
-	) );	
-	$thank_you_page_options = '';
-	foreach( $existing_pages->posts as $p ){
-		$clean_title = esc_attr( $p->post_title );
-		$clean_title = (strlen($clean_title)>60?substr($clean_title,0,50).'...':$clean_title);
-		$thank_you_page_options .=	"<option value='{$p->ID}' ".selected($dntly_thank_you_page, $p->ID, false).">{$clean_title}</option>";
-	}
 	$excluded_posttypes = array('dntly_log_entries', 'dntly_fundraisers', 'ccpurge_log_entries');
 	$post_types=get_post_types(array('public'=>true,'_builtin'=>false,'show_ui'=>true), 'objects');
 	$campaign_posttype_options = '';
 	foreach( $post_types as $p ){
 		if( in_array($p->name, $excluded_posttypes))
 			continue;
-		$campaign_posttype_options .=	"<option value='{$p->name}' ".selected($dntly_campaign_posttype, $p->name, false).">{$p->labels->name}</option>";
+		$campaign_posttype_options .=	"<option value='{$p->name}' ".selected($dntly_campaign_posttype, $p->name, false).">Use {$p->labels->name}</option>";
 	}
 	$excluded_posttypes = array('dntly_log_entries', 'dntly_campaigns', 'ccpurge_log_entries');
 	$fundraiser_posttype_options = '';
 	foreach( $post_types as $p ){
 		if( in_array($p->name, $excluded_posttypes))
 			continue;
-		$fundraiser_posttype_options .=	"<option value='{$p->name}' ".selected($dntly_fundraiser_posttype, $p->name, false).">{$p->labels->name}</option>";
+		$fundraiser_posttype_options .=	"<option value='{$p->name}' ".selected($dntly_fundraiser_posttype, $p->name, false).">Use {$p->labels->name}</option>";
 	}
 }
 else{
@@ -242,20 +229,16 @@ else{
 				<td colspan="2"><hr /></td>
 			</tr>
 			<tr>
-				<th><label for="category_base">Import Donately Campaigns</label></th>
-				<td class="col1"></td>
-				<td class="col2">
-					<input type=radio name="dntly_options[sync_to_private]"  value="1" <?php checked( "1", $dntly_sync_to_private); ?>> as Private<br />
-					<input type=radio name="dntly_options[sync_to_private]"  value="0" <?php checked( "0", $dntly_sync_to_private); ?>> as Public<br />
-				</td>
-			</tr>
-			<tr>
-				<th><label for="category_base">Donately Campaign Posttype</label></th>
+				<th><label for="category_base">Donately Campaigns</label></th>
 				<td class="col1"><a href="#" class="tooltip"><span>Use the default 'Dntly Campaigns' posttype - or your own</span></a></td>
 				<td class="col2">
 					<select name="dntly_options[dntly_campaign_posttype]" id="dntly-posttype">
 						<?php print $campaign_posttype_options ?>
 					</select> 
+					<div class="create_as">
+						<input type=radio name="dntly_options[sync_to_private]"  value="1" <?php checked( "1", $dntly_sync_to_private); ?>> Create as 'private'<br />
+						<input type=radio name="dntly_options[sync_to_private]"  value="0" <?php checked( "0", $dntly_sync_to_private); ?>> Create as 'public'<br />
+					</div>
 				</td>
 			</tr>
 			<tr>
@@ -264,45 +247,32 @@ else{
 			</tr>
 			<tr>
 				<th><label for="category_base">Donately Fundraisers</label></th>
-				<td class="col1"></td>
+				<td class="col1"><a href="#" class="tooltip"><span>Do you want to copy your fundraisers from Donately?</span></a></td>
 				<td class="col2">
 					<input type="radio" name="dntly_options[dntly_get_fundraisers]" value="1" <?php checked( $dntly_get_fundraisers, '1' ); ?>/> Sync Donately Fundraisers
-					<span style="width:40px;height:10px;display:inline-block"></span> 
-					<input type="radio" name="dntly_options[dntly_get_fundraisers]" value="0" <?php checked( $dntly_get_fundraisers, '0' ); ?>/> Ignore Donately Fundraisers 
+					<div class="create_as">
+						<input type="radio" name="dntly_options[dntly_get_fundraisers]" value="0" <?php checked( $dntly_get_fundraisers, '0' ); ?>/> Ignore Donately Fundraisers 
+					</div>
 				</td>
 			</tr>		
 			<tr class="fundraiser-block">
-				<th><label for="category_base">Import Donately Fundraisers</label></th>
-				<td class="col1"></td>
-				<td class="col2">
-					<input type=radio name="dntly_options[fundraiser_sync_to_private]"  value="1" <?php checked( "1", $dntly_fundraiser_sync_to_private); ?>> as Private<br />
-					<input type=radio name="dntly_options[fundraiser_sync_to_private]"  value="0" <?php checked( "0", $dntly_fundraiser_sync_to_private); ?>> as Public<br />
-				</td>
-			</tr>
-			<tr class="fundraiser-block">
-				<th><label for="category_base">Donately Fundraiser Posttype</label></th>
+				<th><label for="category_base">Donately Fundraisers</label></th>
 				<td class="col1"><a href="#" class="tooltip"><span>Use the default 'Dntly Fundraisers' posttype - or your own</span></a></td>
 				<td class="col2">
 					<select name="dntly_options[dntly_fundraiser_posttype]" id="dntly-posttype">
 						<?php print $fundraiser_posttype_options ?>
 					</select> 
+					<div class="create_as">
+						<input type=radio name="dntly_options[fundraiser_sync_to_private]"  value="1" <?php checked( "1", $dntly_fundraiser_sync_to_private); ?>> Create as 'private'<br />
+						<input type=radio name="dntly_options[fundraiser_sync_to_private]"  value="0" <?php checked( "0", $dntly_fundraiser_sync_to_private); ?>> Create as 'public'<br />
+					</div>
 				</td>
 			</tr>
+			<?php if(DNTLY_DEBUG): ?>
 			<tr>
 				<th><hr /></th>
 				<td colspan="2"><hr /></td>
 			</tr>
-			<tr>
-				<th><label for="category_base">Donation Thank You Page</label></th>
-				<td class="col1"><a href="#" class="tooltip"><span>Choose a page to redirect the user to after a successful donation.<br/>Must be a top level page (i.e. not have parent)</span></a></td>
-				<td class="col2">
-					<select name="dntly_options[thank_you_page]" id="dntly-account">
-						<option value="">-- Do not redirect after donation --</option>
-						<?php print $thank_you_page_options ?>
-					</select> <br />
-				</td>
-			</tr -->
-			<?php if(DNTLY_DEBUG): ?>
 			<tr>
 				<th><label for="category_base">Debugging</label></th>
 				<td class="col1"></td>

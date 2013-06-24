@@ -1,5 +1,5 @@
 === Donately Donation Form ===
-Contributors: shanaver, bryanmonzon, brianburkett2k
+Contributors: shanaver, bryanmonzon, elzizzo
 Tags: donations, donately, donate.ly, dntly, transactions, widget, stripe, authorize.net, non-profit
 Requires at least: 3.0.1
 Tested up to: 3.5.1
@@ -87,10 +87,20 @@ There are no monthly fees from Donately, but there is a small (under 2% average)
 * Hide Debugging Switch
 
 = 2.0.3 =
-* sniff for indefined constant
+* sniff for undefined constant
 
 = 2.0.4 =
 * fix widget bug
+
+= 3.0.0 =
+* New Donately Donation form functionality: social sharing & tracking on after-donation screen
+* add anonymous option
+* add on behalf of field
+* add tracking code field
+* simplify options page
+* simplify form script
+* namespace all css classes
+* fixed missing closing tag bug
 
 == Upgrade Notice ==
 
