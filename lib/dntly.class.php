@@ -48,7 +48,6 @@ class DNTLY_API {
 			"get_session_token"						=>  array("post", "sessions"),
 			"donate_without_auth"					=>  array("post", "accounts/" . $this->dntly_account_id . "/donate_without_auth"),		
 			"create_fundraiser"						=>  array("post", "fundraisers"),
-			"create_user_and_fundraiser"	=>  array("post", "people/create_person_and_fundraiser"),
 			"create_person"       				=>  array("post", "people"),
 			"person_exists"       				=>  array("get",  "public/people/exists"),
 			"get_my_accounts"							=>  array("get",  "accounts"),

@@ -67,7 +67,7 @@ class Dntly_Donation_Form_Sidebar extends WP_Widget {
 		$tracking_codes 	= isset( $instance['tracking_codes'] ) ? $instance['tracking_codes'] : null;
 
 		$dntly 		= new DNTLY_API;
-		$Account 	= $dntly->dntly_options['account'] . '.dntly.com';
+		$account 	= $dntly->dntly_options['account'] . '.dntly.com';
 
 		$campaigns = new WP_Query(
 			array(

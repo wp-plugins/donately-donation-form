@@ -102,6 +102,10 @@ There are no monthly fees from Donately, but there is a small (under 2% average)
 * namespace all css classes
 * fixed missing closing tag bug
 
+= 3.0.1 =
+* simplify fundraiser create urls
+* fix bug in widget variable
+
 == Upgrade Notice ==
 
 = 1.0.0 =
