@@ -16,7 +16,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 
 class DNTLY_API {
-	
+
 	var $api_scheme 			    = array('production' => 'https');//, 'staging' => 'http');//, 'dev' => 'http');
 	var $api_domain 			    = array('production' => 'dntly.com');//, 'staging' => 'dntly-staging.com');//, 'dev' => 'dntly.local:3000');
 	var $api_subdomain 		    = "www";
@@ -28,10 +28,10 @@ class DNTLY_API {
 	var $wordpress_upload_dir = null;
 	var $suppress_logging			= false;
 	var $remote_results				= null;
-		
+
 	function __construct() {
 		if(DNTLY_DEBUG){
-			$this->api_scheme['staging'] = 'http';$this->api_scheme['dev'] = 'http';$this->api_domain['staging'] = 'dntly-staging.com';$this->api_domain['dev'] = 'dntly.local:3000';
+			$this->api_scheme['staging'] = 'https';$this->api_scheme['dev'] = 'http';$this->api_domain['staging'] = 'dntly-staging.com';$this->api_domain['dev'] = 'dntly.local:3000';
 		}
 		$this->dntly_options = get_option('dntly_options');
 		if( isset($this->dntly_options['account']) ){
@@ -41,12 +41,12 @@ class DNTLY_API {
 		$this->build_api_methods();
 		$this->wordpress_upload_dir = wp_upload_dir();
 	}
-	
+
 	function build_api_methods(){
 		$this->api_methods = array(
 			"root"		            				=>  array("get",  ""),
 			"get_session_token"						=>  array("post", "sessions"),
-			"donate_without_auth"					=>  array("post", "accounts/" . $this->dntly_account_id . "/donate_without_auth"),		
+			"donate_without_auth"					=>  array("post", "accounts/" . $this->dntly_account_id . "/donate_without_auth"),
 			"create_fundraiser"						=>  array("post", "fundraisers"),
 			"create_person"       				=>  array("post", "people"),
 			"person_exists"       				=>  array("get",  "public/people/exists"),
@@ -56,18 +56,18 @@ class DNTLY_API {
 			"get_campaigns"       				=>  array("get",  "admin/campaigns"),
 			"get_fundraisers"     				=>  array("get",  "admin/fundraisers"),
 			"get_donations"       				=>  array("get",  "admin/donations"),
-			"get_events"          				=>  array("get",  "admin/events"),	
+			"get_events"          				=>  array("get",  "admin/events"),
 		);
 	}
-	
+
 	function return_json_success($data='') {
 		print json_encode( array("success" => 'true', "data" => $data) );
-	}	
-	
+	}
+
 	function return_json_error($error='') {
 		print json_encode( array("success" => 'false', 'error' => array("message" => $error)) );
-	}		
-	
+	}
+
 	function get_api_token($user, $password, $environment){
 		if( isset($environment) ){
 			$this->dntly_options['environment'] = $environment;
@@ -87,7 +87,7 @@ class DNTLY_API {
 		update_option('dntly_options', $options);
 		$this->return_json_success( array('token' => $session_token->token) );
 		die();
-	}	
+	}
 
 	function array_to_object($array) {
     if(!is_array($array)) { return stripslashes($array); }
@@ -113,9 +113,9 @@ class DNTLY_API {
 	}
 
 	function verify_host($url){
-		if (!$url) return false; 
-		$url = array_map('trim', $url); 
-		$url['port'] = (!isset($url['port'])) ? 80 : (int)$url['port']; 
+		if (!$url) return false;
+		$url = array_map('trim', $url);
+		$url['port'] = (!isset($url['port'])) ? 80 : (int)$url['port'];
 		if( !fsockopen($url['host'], $url['port'], $errno, $errstr, 3) ) return false;
 		return true;
 	}
@@ -131,7 +131,7 @@ class DNTLY_API {
 			return false;
 		}
 	}
-	
+
 	function make_api_request($api_method, $auth=true, $post_variables=null){
 		$url = $this->build_url($api_method);
 		if( isset($this->dntly_options['console_calls']) && !$this->do_not_log() ){
@@ -140,9 +140,9 @@ class DNTLY_API {
 		if($auth){
 			$session_token = $this->dntly_options['token'];
 			$authorization = 'Basic ' . base64_encode("{$session_token}:");
-			$headers = array( 'Authorization' => $authorization, 'sslverify' => false );			
+			$headers = array( 'Authorization' => $authorization, 'sslverify' => false );
 		}else{
-			$headers = array( 'sslverify' => false );	
+			$headers = array( 'sslverify' => false );
 		}
 		if( $this->api_methods[$api_method][0] == "post" ){
 			$this->remote_results = wp_remote_post($url, array('headers' => $headers, 'body' => $post_variables));
@@ -160,7 +160,7 @@ class DNTLY_API {
 				//$this->return_json_error('Wordpress Error - ' . json_encode($results));
 				return null;
 				//die();
-			}			
+			}
 		}
 		if($this->remote_results['response']['code'] != '200'){
 			$this->return_json_error($this->remote_results['response']['message']);
@@ -175,7 +175,7 @@ class DNTLY_API {
 		$cents = substr($amount_in_cents, -2);
 		return $dollars . '.' . $cents;
 	}
-	
+
 	function get_accounts(){
 		$accounts = $this->make_api_request("get_my_accounts");
 		if( !$accounts ){
@@ -183,7 +183,7 @@ class DNTLY_API {
 		}
 		return $accounts;
 	}
-	
+
 	function get_campaigns($referrer=null){
 		$count_accounts  = 0;
 		$count_campaigns = array('add' => 0, 'update' => 0);
@@ -199,7 +199,7 @@ class DNTLY_API {
 		}
 		else{
 			$count_accounts++;
-			$get_campaigns = $this->make_api_request("get_campaigns", true, array('account_ids' => $this->dntly_account_id));
+			$get_campaigns = $this->make_api_request("get_campaigns", true, array('account_ids' => $this->dntly_account_id, 'count' => 100));
 			foreach($get_campaigns->campaigns as $campaign){
 				$count_campaigns = $this->add_update_campaign($campaign, $this->dntly_account_id, $count_campaigns);
 			}
@@ -213,15 +213,15 @@ class DNTLY_API {
 		}
 		die();
 	}
-	
+
 	function add_update_campaign($campaign, $account_id, $count_campaigns){
 
 		if( $campaign->state == 'archived' ){
 			return array( 'add' => $count_campaigns['add'], 'update' => $count_campaigns['update'], 'skip' => ($count_campaigns['skip']+1) );
 		}
-		
+
 		$trans_type = null;
-	
+
 		$_dntly_data = array(
 			'dntly_id'								=> $campaign->id,
 			'account_title'						=> $this->dntly_options['account_title'],
@@ -234,7 +234,7 @@ class DNTLY_API {
 			'percent_funded'					=> $campaign->percent_funded,
 			'photo_original'					=> (stristr($campaign->photo->original, 'http') ? $campaign->photo->original : ''),
 		);
-	
+
 		// Does this exist in the DB already? If it does, update it.
 		$post_exists = new WP_Query(
 			array(
@@ -249,12 +249,12 @@ class DNTLY_API {
 				array(
 					'key'         => '_dntly_environment',
 					'value'       => $this->dntly_options['environment'],
-				)		
+				)
 			))
 		);
-	
+
 		if( isset($post_exists->posts[0]->ID) ){
-			$post_id = $post_exists->posts[0]->ID;  
+			$post_id = $post_exists->posts[0]->ID;
 			$trans_type = "update";
 		}
 		else{
@@ -289,22 +289,22 @@ class DNTLY_API {
         $attachment_id = wp_insert_post( $attachment, true );
         add_post_meta($post_id, '_thumbnail_id', $attachment_id);
         add_post_meta($attachment_id, '_wp_attached_file', $img_sub_path, true );
-			}  
+			}
 
-			$trans_type = "add";	
+			$trans_type = "add";
 		}
-	
-		update_post_meta($post_id, '_dntly_data', $_dntly_data);	
+
+		update_post_meta($post_id, '_dntly_data', $_dntly_data);
 		update_post_meta($post_id, '_dntly_id', $campaign->id );
 		update_post_meta($post_id, '_dntly_account_id', $account_id);
-		update_post_meta($post_id, '_dntly_environment', $this->dntly_options['environment']);	
-	
+		update_post_meta($post_id, '_dntly_environment', $this->dntly_options['environment']);
+
 		if( isset($this->dntly_options['console_details']) && !$this->do_not_log() ){
 			dntly_transaction_logging("\nCampaign: {$trans_type} {$campaign->title} (dntly_id:{$campaign->id} | local_id:{$post_id})", 'print_debug');
 		}
-		
+
 		return array('add' => ($count_campaigns['add']+($trans_type=='add'?1:0)), 'update' => ($count_campaigns['update']+($trans_type=='update'?1:0)), 'skip' => $count_campaigns['skip']);
-	}	
+	}
 
 	function add_update_fundraiser($fundraiser, $account_id){
 
@@ -313,7 +313,7 @@ class DNTLY_API {
 		$this->api_runtime_id = $fundraiser->person_id;
 		$this->build_api_methods();
 		$person = $this->make_api_request('get_person', true);
-	
+
 		$_dntly_data = array(
 			'dntly_id'								=> $fundraiser->id,
 			'account_title'						=> $this->dntly_options['account_title'],
@@ -339,10 +339,10 @@ class DNTLY_API {
 				array(
 					'key'         => '_dntly_environment',
 					'value'       => $this->dntly_options['environment'],
-				)		
+				)
 			))
 		);
-	
+
 		if( isset($post_exists->posts[0]->ID) ){
 			$post_id = $post_exists->posts[0]->ID;
 			$trans_type = "update";
@@ -380,23 +380,23 @@ class DNTLY_API {
         $attachment_id = wp_insert_post( $attachment, true );
         add_post_meta($post_id, '_thumbnail_id', $attachment_id);
         add_post_meta($attachment_id, '_wp_attached_file', $img_sub_path, true );
-			}             
+			}
 
-			$trans_type = "add";	
+			$trans_type = "add";
 		}
-	
-		update_post_meta($post_id, '_dntly_data', $_dntly_data);	
+
+		update_post_meta($post_id, '_dntly_data', $_dntly_data);
 		update_post_meta($post_id, '_dntly_id', $fundraiser->id );
 		update_post_meta($post_id, '_dntly_account_id', $account_id);
 		update_post_meta($post_id, '_dntly_campaign_id', $fundraiser->campaign_id);
 		update_post_meta($post_id, '_dntly_environment', $this->dntly_options['environment']);
-	
+
 		if( isset($this->dntly_options['console_details']) && !$this->do_not_log() ){
 			dntly_transaction_logging("\nFundraiser: {$trans_type} {$fundraiser->title} (dntly_id:{$fundraiser->id} | local_id:{$post_id})", 'print_debug');
 		}
-	
+
 		return $post_id;
-	}	
+	}
 
 	function create_fundraiser(){
 		$this->suppress_logging = true;
@@ -404,8 +404,8 @@ class DNTLY_API {
 		if( $dntly_result->success ){
 			if( isset($dntly_result->fundraiser->id) ){
 				$post_id = $this->add_update_fundraiser($dntly_result->fundraiser, $this->dntly_account_id);
-				$permalink = get_permalink($post_id);		
-				print json_encode(array('success' => true, 'url' => $permalink));	
+				$permalink = get_permalink($post_id);
+				print json_encode(array('success' => true, 'url' => $permalink));
 			}
 			else{
 				print json_encode(array('success' => false, 'message' => 'Error finding new fundraiser url' ));
@@ -430,11 +430,11 @@ class DNTLY_API {
 			}
 		}
 		else{
-			print json_encode(array('success' => false, 'message' => 'Connection Error'));	
+			print json_encode(array('success' => false, 'message' => 'Connection Error'));
 		}
 		die();
 	}
-	
+
 	function get_fundraisers($referrer=null){
 		$count_fundraisers = 0;
 		$get_fundraisers = $this->make_api_request("get_fundraisers", true, array('count' => 100));
@@ -450,5 +450,5 @@ class DNTLY_API {
 		}
 		die();
 	}
-	
+
 }

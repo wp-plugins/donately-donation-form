@@ -4,7 +4,7 @@
 Plugin Name:  Donately Integration
 Plugin URI:   http://www.donately.com
 Description:  API Integration with the Donately donation platform
-Version:      3.0.1
+Version:      3.1.0
 Author:       5ifty&5ifty
 Author URI:   https://www.fiftyandfifty.org/
 Contributors: shanaver, bryanmonzon, elzizzo
@@ -17,7 +17,7 @@ Neither the name of Alex Moss or pleer nor the names of its contributors may be 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-define('DNTLY_VERSION', '3.0.1');
+define('DNTLY_VERSION', '3.1.0');
 
 /* set to true for testing/debugging in development & staging environments */
 //define('DNTLY_DEBUG', true);
@@ -59,16 +59,16 @@ function dntly_add_menu_page(){
 			include_once($options_page_url);
 		}
 	};
-	add_submenu_page( 'options-general.php', 'Donately', 'Donately', 'switch_themes', 'dntly', 'dntly_menu_page' );	
+	add_submenu_page( 'options-general.php', 'Donately', 'Donately', 'switch_themes', 'dntly', 'dntly_menu_page' );
 };
 add_action( 'admin_menu', 'dntly_add_menu_page' );
 
 
 // Add settings link on plugin page
-function dntly_plugin_settings_link($links) { 
-  $settings_link = '<a href="options-general.php?page=dntly">Settings</a>'; 
-  array_unshift($links, $settings_link); 
-  return $links; 
+function dntly_plugin_settings_link($links) {
+  $settings_link = '<a href="options-general.php?page=dntly">Settings</a>';
+  array_unshift($links, $settings_link);
+  return $links;
 }
 add_filter("plugin_action_links_" . DNTLY_PLUGIN_BASENAME, 'dntly_plugin_settings_link' );
 
@@ -121,12 +121,12 @@ function dntly_activate_cron_syncing($cron) {
 // function for removing the syncing everything cron
 function dntly_deactivate_cron_syncing() {
 	if( wp_get_schedule('dntly_syncing_cron') ){
-		dntly_transaction_logging('Donately Plugin - stop hourly scheduler');	
-		wp_clear_scheduled_hook('dntly_syncing_cron');		
+		dntly_transaction_logging('Donately Plugin - stop hourly scheduler');
+		wp_clear_scheduled_hook('dntly_syncing_cron');
 	}
 }
 
-/* 
+/*
 	Transaction Logging
 */
 
@@ -145,7 +145,7 @@ function dntly_transaction_logging($message='empty', $status='success') {
 		  'post_status' => 'publish',
 		  'post_name' => ('dntly-log-' . ($total->publish + 1)),
 		  'post_type' => 'dntly_log_entries',
-		);  
+		);
 		wp_insert_post( $log_entry );
 	}
 }
@@ -161,7 +161,7 @@ function dntly_get_table_logging($verify=false){
 	if( $verify && !$log_entries->have_posts() ){
 		return false;
 	}
-	
+
 	print "<h3>Donately integration Logging</h3>";
 	print "<table>";
 	print "<tr><th>ID</th><th>Time</th><th>Message</th></tr>";
@@ -188,7 +188,7 @@ function dntly_deactivate(){
 register_deactivation_hook(__FILE__,'dntly_deactivate');
 
 
-/* 
+/*
 
 Donately Ajax Methods
 
@@ -206,7 +206,7 @@ add_action( 'wp_ajax_dntly_get_api_token', 'dntly_get_api_token' );
 function dntly_get_accounts(){
 	$dntly = new DNTLY_API;
 	$dntly_data = $dntly->get_accounts();
-	return $dntly_data->accounts;	
+	return $dntly_data->accounts;
 }
 add_action( 'wp_ajax_dntly_get_accounts', 'dntly_get_accounts' );
 
