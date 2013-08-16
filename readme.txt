@@ -109,6 +109,9 @@ There are no monthly fees from Donately, but there is a small (under 2% average)
 = 3.1.0 =
 * sanitize admin form & preset options
 
+= 3.1.1 =
+* fix option reset form in admin for checkboxes
+
 == Upgrade Notice ==
 
 = 1.0.0 =

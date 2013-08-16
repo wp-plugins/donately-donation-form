@@ -105,9 +105,9 @@ class DNTLY_API {
 	}
 
 	function build_url($api_method){
-		$url  = ( isset($this->dntly_options['environment']) ? $this->api_scheme[$this->dntly_options['environment']] : $this->api_scheme['production'] ) . '://';
+		$url  = ( !empty($this->dntly_options['environment']) ? $this->api_scheme[$this->dntly_options['environment']] : $this->api_scheme['production'] ) . '://';
 		$url .= $this->api_subdomain . '.';
-		$url .= ( isset($this->dntly_options['environment']) ? $this->api_domain[$this->dntly_options['environment']] : $this->api_domain['production'] );
+		$url .= ( !empty($this->dntly_options['environment']) ? $this->api_domain[$this->dntly_options['environment']] : $this->api_domain['production'] );
 		if($api_method != 'root'){$url .= $this->api_endpoint . $this->api_methods[$api_method][1];}
 		return $url;
 	}
@@ -115,7 +115,7 @@ class DNTLY_API {
 	function verify_host($url){
 		if (!$url) return false;
 		$url = array_map('trim', $url);
-		$url['port'] = (!isset($url['port'])) ? 80 : (int)$url['port'];
+		$url['port'] = (!!empty($url['port'])) ? 80 : (int)$url['port'];
 		if( !fsockopen($url['host'], $url['port'], $errno, $errstr, 3) ) return false;
 		return true;
 	}
@@ -134,7 +134,7 @@ class DNTLY_API {
 
 	function make_api_request($api_method, $auth=true, $post_variables=null){
 		$url = $this->build_url($api_method);
-		if( isset($this->dntly_options['console_calls']) && !$this->do_not_log() ){
+		if( !empty($this->dntly_options['console_calls']) && !$this->do_not_log() ){
 			dntly_transaction_logging("\n" . "api url: " . $url . "\n" . "api post args: " . (sizeof($post_variables) ? print_r($post_variables, true) : '') . "\n", 'print_debug');
 		}
 		if($auth){
@@ -299,7 +299,7 @@ class DNTLY_API {
 		update_post_meta($post_id, '_dntly_account_id', $account_id);
 		update_post_meta($post_id, '_dntly_environment', $this->dntly_options['environment']);
 
-		if( isset($this->dntly_options['console_details']) && !$this->do_not_log() ){
+		if( !empty($this->dntly_options['console_details']) && !$this->do_not_log() ){
 			dntly_transaction_logging("\nCampaign: {$trans_type} {$campaign->title} (dntly_id:{$campaign->id} | local_id:{$post_id})", 'print_debug');
 		}
 
@@ -391,7 +391,7 @@ class DNTLY_API {
 		update_post_meta($post_id, '_dntly_campaign_id', $fundraiser->campaign_id);
 		update_post_meta($post_id, '_dntly_environment', $this->dntly_options['environment']);
 
-		if( isset($this->dntly_options['console_details']) && !$this->do_not_log() ){
+		if( !empty($this->dntly_options['console_details']) && !$this->do_not_log() ){
 			dntly_transaction_logging("\nFundraiser: {$trans_type} {$fundraiser->title} (dntly_id:{$fundraiser->id} | local_id:{$post_id})", 'print_debug');
 		}
 

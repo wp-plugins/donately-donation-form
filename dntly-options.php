@@ -12,7 +12,7 @@ function donately_sanitize_admin_inputs($dntly_options, $dntly_options_post){
 		'console_details' 			=> "0",
 		'console_debugger' 			=> "0",
 		'console_calls' 			=> "0",
-		'thank_you_page' 			=> "0",
+		'thank_you_page' 			=> null,
 		'sync_to_private' 			=> "0",
 		'dntly_campaign_posttype' 	=> "dntly_campaigns",
 		'dntly_get_fundraisers' 	=> "0",
@@ -24,7 +24,7 @@ function donately_sanitize_admin_inputs($dntly_options, $dntly_options_post){
 		if( isset($dntly_options_post[$field]) ){
 			$dntly_options[$field] = sanitize_text_field( $dntly_options_post[$field] );
 		}
-		elseif( !isset($dntly_options[$field]) ){
+		elseif($dntly_options_post) {
 			$dntly_options[$field] = $default;
 		}
 
@@ -319,9 +319,9 @@ else{
 				<th><label for="category_base">Options</label></th>
 				<td class="col1"></td>
 				<td class="col2">
-					<input type=checkbox name="dntly_options[console_details]"  value="1" <?php checked( "1", $dntly_options['console_details']); ?>> details to console (debug)<br />
-					<input type=checkbox name="dntly_options[console_debugger]"  value="1" <?php checked( "1", $dntly_options['console_debugger']); ?>> errors to console (debug)<br />
-					<input type=checkbox name="dntly_options[console_calls]"  value="1" <?php checked( "1", $dntly_options['console_calls']); ?>> API calls to console (debug)<br />
+					<input type=checkbox name="dntly_options[console_details]"  value="1" <?php checked( $dntly_options['console_details'], '1'); ?>> details to console (debug)<br />
+					<input type=checkbox name="dntly_options[console_debugger]"  value="1" <?php checked( $dntly_options['console_debugger'], '1'); ?>> errors to console (debug)<br />
+					<input type=checkbox name="dntly_options[console_calls]"  value="1" <?php checked( $dntly_options['console_calls'], '1'); ?>> API calls to console (debug)<br />
 				</td>
 			</tr>
 		<?php endif; ?>
