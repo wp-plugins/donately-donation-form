@@ -211,7 +211,7 @@ class DNTLY_API {
 		else{
 			dntly_transaction_logging('Synced Campaigns Error, no campaigns found', 'error');
 		}
-		die();
+		// die();
 	}
 
 	function add_update_campaign($campaign, $account_id, $count_campaigns){
@@ -230,7 +230,7 @@ class DNTLY_API {
 			'donations_count'					=> $campaign->donations_count,
 			'donors_count'						=> $campaign->donors_count,
 			'amount_raised'						=> $campaign->amount_raised,
-			'amount_raised_in_cents'	=> $campaign->amount_raised_in_cents,
+			'amount_raised_in_cents'			=> $campaign->amount_raised_in_cents,
 			'percent_funded'					=> $campaign->percent_funded,
 			'photo_original'					=> (stristr($campaign->photo->original, 'http') ? $campaign->photo->original : ''),
 		);
@@ -279,16 +279,16 @@ class DNTLY_API {
 				$img_sub_path = $this->wordpress_upload_dir['subdir'] . "/" . $img_name . "." . $img_filetype['ext'];
 				$image_file = file_get_contents( $image );
 				file_put_contents($img_path, $image_file);
-        $attachment = array(
-         'post_type'      => 'attachment',
-         'post_title'     => 'Donately Campaign - ' . $campaign->title,
-         'post_parent'    => $post_id,
-         'post_status'    => 'inherit',
-         'post_mime_type' => $img_filetype['type'],
-        );
-        $attachment_id = wp_insert_post( $attachment, true );
-        add_post_meta($post_id, '_thumbnail_id', $attachment_id);
-        add_post_meta($attachment_id, '_wp_attached_file', $img_sub_path, true );
+		        $attachment = array(
+		         'post_type'      => 'attachment',
+		         'post_title'     => 'Donately Campaign - ' . $campaign->title,
+		         'post_parent'    => $post_id,
+		         'post_status'    => 'inherit',
+		         'post_mime_type' => $img_filetype['type'],
+		        );
+		        $attachment_id = wp_insert_post( $attachment, true );
+		        add_post_meta($post_id, '_thumbnail_id', $attachment_id);
+		        add_post_meta($attachment_id, '_wp_attached_file', $img_sub_path, true );
 			}
 
 			$trans_type = "add";
@@ -306,24 +306,28 @@ class DNTLY_API {
 		return array('add' => ($count_campaigns['add']+($trans_type=='add'?1:0)), 'update' => ($count_campaigns['update']+($trans_type=='update'?1:0)), 'skip' => $count_campaigns['skip']);
 	}
 
-	function add_update_fundraiser($fundraiser, $account_id){
+	function add_update_fundraiser($fundraiser, $account_id, &$count_fundraisers){
+
+		if( $fundraiser->state == 'archived' ){
+			$count_fundraisers['skip']+=1;
+			return null;
+		}
 
 		$trans_type = null;
 
 		$this->api_runtime_id = $fundraiser->person_id;
 		$this->build_api_methods();
-		$person = $this->make_api_request('get_person', true);
 
 		$_dntly_data = array(
-			'dntly_id'								=> $fundraiser->id,
-			'account_title'						=> $this->dntly_options['account_title'],
-			'account_id'							=> $account_id,
-			'campaign_id'							=> $fundraiser->campaign_id,
-			'goal'                    => $this->convert_amount_in_cents_to_amount($fundraiser->goal_in_cents),
-			'permalink'								=> $fundraiser->permalink,
-			'amount_raised'						=> $fundraiser->amount_raised,
-			'person'						      => (isset($person->person->first_name) ? $person->person->first_name . " " . $person->person->last_name : $person->person->email),
-			'photo_original'					=> (stristr($fundraiser->photo->original, 'http') ? $fundraiser->photo->original : ''),
+			'dntly_id'				=> $fundraiser->id,
+			'account_title'			=> $this->dntly_options['account_title'],
+			'account_id'			=> $account_id,
+			'campaign_id'			=> $fundraiser->campaign_id,
+			'goal'                  => $this->convert_amount_in_cents_to_amount($fundraiser->goal_in_cents),
+			'permalink'				=> $fundraiser->permalink,
+			'amount_raised'			=> $fundraiser->amount_raised,
+			'person'				=> $fundraiser->person_full_name_or_email,
+			'photo_original'		=> (stristr($fundraiser->photo->original, 'http') ? $fundraiser->photo->original : ''),
 		);
 
 		$post_exists = new WP_Query(
@@ -370,16 +374,16 @@ class DNTLY_API {
 				$img_sub_path = $this->wordpress_upload_dir['subdir'] . "/" . $img_name . "." . $img_filetype['ext'];
 				$image_file = file_get_contents( $image );
 				file_put_contents($img_path, $image_file);
-        $attachment = array(
-         'post_type'      => 'attachment',
-         'post_title'     => 'Donately Fundraiser - ' . $fundraiser->title,
-         'post_parent'    => $post_id,
-         'post_status'    => 'inherit',
-         'post_mime_type' => $img_filetype['type'],
-        );
-        $attachment_id = wp_insert_post( $attachment, true );
-        add_post_meta($post_id, '_thumbnail_id', $attachment_id);
-        add_post_meta($attachment_id, '_wp_attached_file', $img_sub_path, true );
+		        $attachment = array(
+		         'post_type'      => 'attachment',
+		         'post_title'     => 'Donately Fundraiser - ' . $fundraiser->title,
+		         'post_parent'    => $post_id,
+		         'post_status'    => 'inherit',
+		         'post_mime_type' => $img_filetype['type'],
+		        );
+		        $attachment_id = wp_insert_post( $attachment, true );
+		        add_post_meta($post_id, '_thumbnail_id', $attachment_id);
+		        add_post_meta($attachment_id, '_wp_attached_file', $img_sub_path, true );
 			}
 
 			$trans_type = "add";
@@ -395,6 +399,9 @@ class DNTLY_API {
 			dntly_transaction_logging("\nFundraiser: {$trans_type} {$fundraiser->title} (dntly_id:{$fundraiser->id} | local_id:{$post_id})", 'print_debug');
 		}
 
+		$count_fundraisers['add']+=($trans_type=='add'?1:0);
+		$count_fundraisers['update']+=($trans_type=='update'?1:0);
+
 		return $post_id;
 	}
 
@@ -403,7 +410,8 @@ class DNTLY_API {
 		$dntly_result = $this->array_to_object($_POST['dntly_result']);
 		if( $dntly_result->success ){
 			if( isset($dntly_result->fundraiser->id) ){
-				$post_id = $this->add_update_fundraiser($dntly_result->fundraiser, $this->dntly_account_id);
+				$count_fundraisers = array('add' => 0, 'update' => 0);
+				$post_id = $this->add_update_fundraiser($dntly_result->fundraiser, $this->dntly_account_id, $count_fundraisers);
 				$permalink = get_permalink($post_id);
 				print json_encode(array('success' => true, 'url' => $permalink));
 			}
@@ -436,14 +444,25 @@ class DNTLY_API {
 	}
 
 	function get_fundraisers($referrer=null){
-		$count_fundraisers = 0;
-		$get_fundraisers = $this->make_api_request("get_fundraisers", true, array('count' => 100));
-		foreach($get_fundraisers->fundraisers as $fundraiser){
-			$count_fundraisers++;
-			$this->add_update_fundraiser($fundraiser, $this->dntly_options['account_id']);
+		$count  = 100;
+		$offset = 0;
+
+		$count_fundraisers = array('add' => 0, 'update' => 0, 'skip' => 0);
+		$get_fundraisers 	= $this->make_api_request("get_fundraisers", true, array('count' => $count));
+		$all_fundraisers 	= $get_fundraisers->total_count;
+
+		while(  $all_fundraisers > ($count_fundraisers['add'] + $count_fundraisers['update'] + $count_fundraisers['skip']) ){
+			foreach($get_fundraisers->fundraisers as $fundraiser){
+
+				$this->add_update_fundraiser($fundraiser, $this->dntly_options['account_id'], $count_fundraisers);
+			}
+			if( $all_fundraisers > ($count_fundraisers['add'] + $count_fundraisers['update'] + $count_fundraisers['skip']) ){
+				$get_fundraisers = $this->make_api_request("get_fundraisers", true, array('count' => $count, 'offset' => ($offset+=$count)) );
+			}
 		}
-		if($count_fundraisers){
-			dntly_transaction_logging("Synced Fundraisers - added/updated {$count_fundraisers} fundraisers from the {$this->dntly_options['account']} account");
+
+		if( $count_fundraisers['add'] || $count_fundraisers['update'] || $count_fundraisers['skip'] ){
+			dntly_transaction_logging("Synced Fundraisers - ".$count_fundraisers['add']." added, ".$count_fundraisers['update']." updated ".$count_fundraisers['skip']." skipped ");
 		}
 		else{
 			dntly_transaction_logging('Synced Fundraisers Error, no fundraisers found', 'error');

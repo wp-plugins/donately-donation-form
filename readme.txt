@@ -112,6 +112,9 @@ There are no monthly fees from Donately, but there is a small (under 2% average)
 = 3.1.1 =
 * fix option reset form in admin for checkboxes
 
+= 3.2.0 =
+* allow for syncing of more than 100 fundraisers (loop through API)
+
 == Upgrade Notice ==
 
 = 1.0.0 =

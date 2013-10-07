@@ -44,15 +44,18 @@ function dntly_custom_post_types(){
 	            'not_found_in_trash' => __( 'No fundraisers found in trash' )
 	        ),
 	      'public' => true,
-	      'supports' => array( 'title', 'editor', 'excerpt', 'comments', 'thumbnail', 'revisions'),
+	      'supports' => array( 'title', 'editor', 'excerpt', 'comments', 'thumbnail', 'revisions', 'custom-fields'),
 	      'capability_type' => 'post',
 	      'hierarchical' => true,
-	      'taxonomies' => array('category', 'post_tag'),
-	      'rewrite' => array("slug" => "fundraiser"),
+	      'taxonomies' => array('category', 'post_tag'), 
+	      'rewrite' => array("slug" => "event", "with_front" => false),
 	      'menu_position' => '26',
 	      'show_in_menu' => ($dntly_options['dntly_get_fundraisers'] == '1'?true:false),
+
 	    )
-	);
+	); 
+
+
 	register_post_type( 'dntly_log_entries',
 	    array(
       	'labels' => array(
