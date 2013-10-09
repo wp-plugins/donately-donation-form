@@ -358,6 +358,7 @@ else{
 					<th><label for="category_base">Manual Syncing</label></th>
 					<td class="col1"></td>
 					<td class="col2">
+						<input type="button" value="Sync Account Stats" id="dntly-sync-account-stats" class="button-primary"/>
 						<input type="button" value="Sync Campaigns" id="dntly-sync-campaigns" class="button-primary"/>
 						<input type="button" value="Sync Fundraisers" id="dntly-sync-fundraisers" class="button-primary fundraiser-block" />
 					</td>

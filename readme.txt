@@ -115,6 +115,11 @@ There are no monthly fees from Donately, but there is a small (under 2% average)
 = 3.2.0 =
 * allow for syncing of more than 100 fundraisers (loop through API)
 
+= 3.3.0 =
+* added syncing of account stats
+* added helper functions
+* simplify admin screens
+
 == Upgrade Notice ==
 
 = 1.0.0 =

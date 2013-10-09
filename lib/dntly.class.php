@@ -17,17 +17,17 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 class DNTLY_API {
 
-	var $api_scheme 			    = array('production' => 'https');//, 'staging' => 'http');//, 'dev' => 'http');
-	var $api_domain 			    = array('production' => 'dntly.com');//, 'staging' => 'dntly-staging.com');//, 'dev' => 'dntly.local:3000');
-	var $api_subdomain 		    = "www";
-	var $api_endpoint 		    = "/api/v1/";
-	var $api_methods 			    = array();
-	var $api_runtime_id 			= 0;
-	var $dntly_account_id     = 0;
-	var $dntly_options 		    = array();
-	var $wordpress_upload_dir = null;
-	var $suppress_logging			= false;
-	var $remote_results				= null;
+	var $api_scheme                = array('production' => 'https');//, 'staging' => 'http');//, 'dev' => 'http');
+	var $api_domain                = array('production' => 'dntly.com');//, 'staging' => 'dntly-staging.com');//, 'dev' => 'dntly.local:3000');
+	var $api_subdomain             = "www";
+	var $api_endpoint              = "/api/v1/";
+	var $api_methods               = array();
+	var $api_runtime_id            = 0;
+	var $dntly_account_id          = 0;
+	var $dntly_options             = array();
+	var $wordpress_upload_dir      = null;
+	var $suppress_logging          = false;
+	var $remote_results            = null;
 
 	function __construct() {
 		if(DNTLY_DEBUG){
@@ -44,15 +44,16 @@ class DNTLY_API {
 
 	function build_api_methods(){
 		$this->api_methods = array(
-			"root"		            				=>  array("get",  ""),
-			"get_session_token"						=>  array("post", "sessions"),
-			"donate_without_auth"					=>  array("post", "accounts/" . $this->dntly_account_id . "/donate_without_auth"),
-			"create_fundraiser"						=>  array("post", "fundraisers"),
+			"root"		            			=>  array("get",  ""),
+			"get_session_token"					=>  array("post", "sessions"),
+			"donate_without_auth"				=>  array("post", "accounts/" . $this->dntly_account_id . "/donate_without_auth"),
+			"create_fundraiser"					=>  array("post", "fundraisers"),
 			"create_person"       				=>  array("post", "people"),
 			"person_exists"       				=>  array("get",  "public/people/exists"),
-			"get_my_accounts"							=>  array("get",  "accounts"),
+			"get_my_accounts"					=>  array("get",  "accounts"),
+            "get_account_stats"                 =>  array("get",  "admin/account/stats"),
 			"get_person"          				=>  array("get",  "admin/people" . ( $this->api_runtime_id ? '/' . $this->api_runtime_id : '' )),
-			"get_all_accounts"						=>  array("get",  "public/accounts"),
+			"get_all_accounts"					=>  array("get",  "public/accounts"),
 			"get_campaigns"       				=>  array("get",  "admin/campaigns"),
 			"get_fundraisers"     				=>  array("get",  "admin/fundraisers"),
 			"get_donations"       				=>  array("get",  "admin/donations"),
@@ -184,9 +185,36 @@ class DNTLY_API {
 		return $accounts;
 	}
 
+    function update_account_stats($stats){
+        $existing_stats = get_option('dntly_stats');
+        $dntly_stats = array(
+            'total_raised'              => ( !@empty($stats['total_raised'])?$stats['total_raised']:$existing_stats['total_raised'] ),
+            'total_raised_onetime'      => ( !@empty($stats['total_raised_onetime'])?$stats['total_raised_onetime']:$existing_stats['total_raised_onetime'] ),
+            'total_raised_recurring'    => ( !@empty($stats['total_raised_recurring'])?$stats['total_raised_recurring']:$existing_stats['total_raised_recurring'] ),
+            'total_donations'           => ( !@empty($stats['total_donations'])?$stats['total_donations']:$existing_stats['total_donations'] ),
+            'total_campaigns_count'     => ( !@empty($stats['total_campaigns_count'])?$stats['total_campaigns_count']:$existing_stats['total_campaigns_count'] ),
+            'total_fundraisers_count'   => ( !@empty($stats['total_fundraisers_count'])?$stats['total_fundraisers_count']:$existing_stats['total_fundraisers_count'] ),
+        );
+        update_option('dntly_stats', $dntly_stats);
+        return $dntly_stats;
+    }
+
+    function get_account_stats(){
+        $stats = $this->make_api_request("get_account_stats", true);
+        $dntly_stats = array(
+            'total_raised'              => $stats->amount_raised,
+            'total_raised_onetime'      => $stats->one_time_amount_raised,
+            'total_raised_recurring'    => $stats->recurring_amount_raised,
+            'total_donations'           => $stats->donations_count
+        );
+        $all_stats = $this->update_account_stats($dntly_stats);
+        dntly_transaction_logging("Synced Account Stats - total_raised: $" . $stats->amount_raised . ", total_donations: " . $stats->donations_count);
+        return $all_stats;
+    }
+
 	function get_campaigns($referrer=null){
 		$count_accounts  = 0;
-		$count_campaigns = array('add' => 0, 'update' => 0);
+		$count_campaigns = array('add' => 0, 'update' => 0, 'skip' => 0);
 		if($referrer){
 			$get_accounts = $this->make_api_request("get_my_accounts", true, array('referrer' => $referrer));
 			foreach($get_accounts->accounts as $account){
@@ -206,6 +234,7 @@ class DNTLY_API {
 		}
 
 		if( $count_campaigns['add'] || $count_campaigns['update'] || $count_campaigns['skip'] ){
+            $this->update_account_stats( array('total_campaigns_count' => ($count_campaigns['add'] + $count_campaigns['update'] + $count_campaigns['skip']) ) );
 			dntly_transaction_logging("Synced Campaigns - ".$count_campaigns['add']." added, ".$count_campaigns['update']." updated ".$count_campaigns['skip']." skipped " . ($count_accounts>1?"from {$count_accounts} accounts":""));
 		}
 		else{
@@ -223,9 +252,9 @@ class DNTLY_API {
 		$trans_type = null;
 
 		$_dntly_data = array(
-			'dntly_id'								=> $campaign->id,
+			'dntly_id'							=> $campaign->id,
 			'account_title'						=> $this->dntly_options['account_title'],
-			'account_id'							=> $account_id,
+			'account_id'						=> $account_id,
 			'campaign_goal'						=> $campaign->campaign_goal,
 			'donations_count'					=> $campaign->donations_count,
 			'donors_count'						=> $campaign->donors_count,
@@ -308,7 +337,7 @@ class DNTLY_API {
 
 	function add_update_fundraiser($fundraiser, $account_id, &$count_fundraisers){
 
-		if( $fundraiser->state == 'archived' ){
+		if( $fundraiser->archived ){
 			$count_fundraisers['skip']+=1;
 			return null;
 		}
@@ -325,6 +354,8 @@ class DNTLY_API {
 			'campaign_id'			=> $fundraiser->campaign_id,
 			'goal'                  => $this->convert_amount_in_cents_to_amount($fundraiser->goal_in_cents),
 			'permalink'				=> $fundraiser->permalink,
+            'public_url'            => $fundraiser->public_url,
+            'donor_count'           => $fundraiser->donor_count,
 			'amount_raised'			=> $fundraiser->amount_raised,
 			'person'				=> $fundraiser->person_full_name_or_email,
 			'photo_original'		=> (stristr($fundraiser->photo->original, 'http') ? $fundraiser->photo->original : ''),
@@ -462,6 +493,7 @@ class DNTLY_API {
 		}
 
 		if( $count_fundraisers['add'] || $count_fundraisers['update'] || $count_fundraisers['skip'] ){
+            $this->update_account_stats( array('total_fundraisers_count' => ($count_fundraisers['add'] + $count_fundraisers['update'] + $count_fundraisers['skip']) ) );
 			dntly_transaction_logging("Synced Fundraisers - ".$count_fundraisers['add']." added, ".$count_fundraisers['update']." updated ".$count_fundraisers['skip']." skipped ");
 		}
 		else{

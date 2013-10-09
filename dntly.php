@@ -4,7 +4,7 @@
 Plugin Name:  Donately Integration
 Plugin URI:   http://www.donately.com
 Description:  API Integration with the Donately donation platform
-Version:      3.2.0
+Version:      3.3.0
 Author:       5ifty&5ifty
 Author URI:   https://www.fiftyandfifty.org/
 Contributors: shanaver, bryanmonzon, elzizzo
@@ -17,7 +17,7 @@ Neither the name of Alex Moss or pleer nor the names of its contributors may be 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-define('DNTLY_VERSION', '3.2.0');
+define('DNTLY_VERSION', '3.3.0');
 
 /* set to true for testing/debugging in development & staging environments */
 //define('DNTLY_DEBUG', true);
@@ -33,6 +33,7 @@ require_once( DNTLY_PLUGIN_PATH . '/lib/shortcodes.php');
 require_once( DNTLY_PLUGIN_PATH . '/lib/meta.php');
 require_once( DNTLY_PLUGIN_PATH . '/lib/dntly.class.php');
 require_once( DNTLY_PLUGIN_PATH . '/lib/widgets.php');
+require_once( DNTLY_PLUGIN_PATH . '/lib/donately-helpers.php');
 
 // admin styles & scripts
 function dntly_admin_scripts_styles(){
@@ -99,6 +100,7 @@ function dntly_cron_schedules(){
 
 // function for syncing everything
 function dntly_sync_everything() {
+	dntly_get_account_stats();
 	dntly_get_campaigns();
 	dntly_get_fundraisers();
 }
@@ -221,6 +223,12 @@ function dntly_get_fundraisers(){
 	$dntly->get_fundraisers();
 }
 add_action( 'wp_ajax_dntly_get_fundraisers', 'dntly_get_fundraisers' );
+
+function dntly_get_account_stats(){
+	$dntly = new DNTLY_API;
+	$dntly->get_account_stats();
+}
+add_action( 'wp_ajax_dntly_get_account_stats', 'dntly_get_account_stats' );
 
 function dntly_create_fundraiser(){
 	$dntly = new DNTLY_API;
