@@ -120,6 +120,9 @@ There are no monthly fees from Donately, but there is a small (under 2% average)
 * added helper functions
 * simplify admin screens
 
+= 3.3.1 =
+* added css-embed to form shortcode
+
 == Upgrade Notice ==
 
 = 1.0.0 =
