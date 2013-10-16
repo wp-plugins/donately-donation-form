@@ -123,6 +123,9 @@ There are no monthly fees from Donately, but there is a small (under 2% average)
 = 3.3.1 =
 * added css-embed to form shortcode
 
+= 3.3.2 =
+* added amount_raised & goal to campaigns & fundraisers as top-level meta (for easier querying)
+
 == Upgrade Notice ==
 
 = 1.0.0 =

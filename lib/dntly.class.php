@@ -327,6 +327,8 @@ class DNTLY_API {
 		update_post_meta($post_id, '_dntly_id', $campaign->id );
 		update_post_meta($post_id, '_dntly_account_id', $account_id);
 		update_post_meta($post_id, '_dntly_environment', $this->dntly_options['environment']);
+		update_post_meta($post_id, '_dntly_amount_raised', $campaign->amount_raised);
+		update_post_meta($post_id, '_dntly_goal', $campaign->campaign_goal);
 
 		if( !empty($this->dntly_options['console_details']) && !$this->do_not_log() ){
 			dntly_transaction_logging("\nCampaign: {$trans_type} {$campaign->title} (dntly_id:{$campaign->id} | local_id:{$post_id})", 'print_debug');
@@ -425,6 +427,8 @@ class DNTLY_API {
 		update_post_meta($post_id, '_dntly_account_id', $account_id);
 		update_post_meta($post_id, '_dntly_campaign_id', $fundraiser->campaign_id);
 		update_post_meta($post_id, '_dntly_environment', $this->dntly_options['environment']);
+		update_post_meta($post_id, '_dntly_amount_raised', $fundraiser->amount_raised);
+		update_post_meta($post_id, '_dntly_goal', $this->convert_amount_in_cents_to_amount($fundraiser->goal_in_cents));
 
 		if( !empty($this->dntly_options['console_details']) && !$this->do_not_log() ){
 			dntly_transaction_logging("\nFundraiser: {$trans_type} {$fundraiser->title} (dntly_id:{$fundraiser->id} | local_id:{$post_id})", 'print_debug');
