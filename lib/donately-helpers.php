@@ -37,7 +37,15 @@ function dntly_percent_funded(){
   global $post;
   if( !isset($post->ID) ){ return null; }
   $meta = get_post_meta($post->ID, '_dntly_data', true);
-  $percent_funded = ( isset($meta['percent_funded'])?$meta['percent_funded']*100:null );
+  if( !empty($meta['percent_funded']) ){
+    $percent_funded = round(($meta['percent_funded']*100 ), 2);
+  }
+  elseif( isset($meta['amount_raised']) && isset($meta['goal']) ){
+    $percent_funded = round(($meta['amount_raised'] / $meta['goal'] * 100), 2);
+  }
+  else{
+    $percent_funded = 0;
+  }
   return $percent_funded;
 }
 

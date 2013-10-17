@@ -359,6 +359,7 @@ class DNTLY_API {
             'public_url'            => $fundraiser->public_url,
             'donor_count'           => $fundraiser->donor_count,
 			'amount_raised'			=> $fundraiser->amount_raised,
+			'percent_funded'		=> (isset($fundraiser->percent_funded)?$fundraiser->percent_funded:null),
 			'person'				=> $fundraiser->person_full_name_or_email,
 			'photo_original'		=> (stristr($fundraiser->photo->original, 'http') ? $fundraiser->photo->original : ''),
 		);
@@ -483,7 +484,9 @@ class DNTLY_API {
 		$offset = 0;
 
 		$count_fundraisers = array('add' => 0, 'update' => 0, 'skip' => 0);
+
 		$get_fundraisers 	= $this->make_api_request("get_fundraisers", true, array('count' => $count));
+
 		$all_fundraisers 	= $get_fundraisers->total_count;
 
 		while(  $all_fundraisers > ($count_fundraisers['add'] + $count_fundraisers['update'] + $count_fundraisers['skip']) ){

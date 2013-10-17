@@ -63,7 +63,7 @@ $percent_funded = (isset($dntly_data['percent_funded']) ? $dntly_data['percent_f
 	<tr>
 		<td style="width:40%">Environment:</td>
 		<td style="width:60%">
-			<?php echo ucwords($dntly_environment); ?> (ID: <?php echo $dtnly_id; ?>)
+			<?php echo ucwords($dntly_environment); ?> (ID: <?php echo $dntly_id; ?>)
 		</td>
 	</tr>
 	<?php endif; ?>
