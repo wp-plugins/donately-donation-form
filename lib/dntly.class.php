@@ -339,15 +339,12 @@ class DNTLY_API {
 
 	function add_update_fundraiser($fundraiser, $account_id, &$count_fundraisers){
 
-		if( $fundraiser->archived ){
+		if( $fundraiser->archived == 'true' ){
 			$count_fundraisers['skip']+=1;
 			return null;
 		}
 
 		$trans_type = null;
-
-		$this->api_runtime_id = $fundraiser->person_id;
-		$this->build_api_methods();
 
 		$_dntly_data = array(
 			'dntly_id'				=> $fundraiser->id,
@@ -446,7 +443,7 @@ class DNTLY_API {
 		$dntly_result = $this->array_to_object($_POST['dntly_result']);
 		if( $dntly_result->success ){
 			if( isset($dntly_result->fundraiser->id) ){
-				$count_fundraisers = array('add' => 0, 'update' => 0);
+				$count_fundraisers = array('add' => 0, 'update' => 0, 'skip' => 0);
 				$post_id = $this->add_update_fundraiser($dntly_result->fundraiser, $this->dntly_account_id, $count_fundraisers);
 				$permalink = get_permalink($post_id);
 				print json_encode(array('success' => true, 'url' => $permalink));

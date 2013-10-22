@@ -129,6 +129,10 @@ There are no monthly fees from Donately, but there is a small (under 2% average)
 = 3.3.3 =
 * added percent_funded to fundraisers
 
+= 3.3.4 =
+* added missing 'skip' array to add_update_fundraiser method
+* fix bad comparison of fundraiser->archived check
+
 == Upgrade Notice ==
 
 = 1.0.0 =
