@@ -479,6 +479,7 @@ class DNTLY_API {
 	function get_fundraisers($referrer=null){
 		$count  = 100;
 		$offset = 0;
+		$maxoffet = 5000; //prevent excessive API call loops
 
 		$count_fundraisers = array('add' => 0, 'update' => 0, 'skip' => 0);
 
@@ -488,11 +489,14 @@ class DNTLY_API {
 
 		while(  $all_fundraisers > ($count_fundraisers['add'] + $count_fundraisers['update'] + $count_fundraisers['skip']) ){
 			foreach($get_fundraisers->fundraisers as $fundraiser){
-
 				$this->add_update_fundraiser($fundraiser, $this->dntly_options['account_id'], $count_fundraisers);
 			}
 			if( $all_fundraisers > ($count_fundraisers['add'] + $count_fundraisers['update'] + $count_fundraisers['skip']) ){
 				$get_fundraisers = $this->make_api_request("get_fundraisers", true, array('count' => $count, 'offset' => ($offset+=$count)) );
+			}
+			if( $offset >= $maxoffet ){
+				dntly_transaction_logging("Max offset ({$maxoffet}) breached  - quitting now", 'error');
+				break;
 			}
 		}
 
