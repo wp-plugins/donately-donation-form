@@ -164,6 +164,9 @@ There are no monthly fees from Donately, but there is a small (under 2% average)
 = 3.3.6 =
 * add shortcode example to README
 
+= 3.3.7 =
+* fix shortcode output buffering
+
 == Upgrade Notice ==
 
 = 1.0.0 =
