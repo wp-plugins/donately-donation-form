@@ -22,5 +22,7 @@ function dntly_build_formjs($atts) {
 		'tracking_codes'						=> null,
 		'dont_send_receipt_email' => false,
   ), $atts));
+	ob_start();
 	include( DNTLY_PLUGIN_PATH . '/lib/donately-formjs.php');
+	return ob_get_clean();
 }
