@@ -70,7 +70,7 @@ function dntly_custom_post_types(){
           'not_found' => __( 'No log entries found' ),
           'not_found_in_trash' => __( 'No log entries found in trash' )
       ),
-      'public' => true,
+      'public' => false,
       'supports' => array('editor'),
       'capability_type' => 'post',
       'hierarchical' => false,
