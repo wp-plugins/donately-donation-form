@@ -114,7 +114,7 @@ else{
 
 }
 
-if($dntly_options['token'] && stristr($dntly_options['syncing'], 'cron') ){
+if( !empty($dntly_options['token']) && stristr($dntly_options['syncing'], 'cron') ){
 	dntly_activate_cron_syncing($dntly_options['syncing']);
 }
 else{
@@ -159,7 +159,7 @@ else{
 
 	<div id="dntly-options-form">
 
-	<?php if(!$dntly_options['token']): ?>
+	<?php if( empty( $dntly_options['token'] ) ): ?>
 		<div class="updated" id="message"><p><strong>Alert!</strong> You must get an Authentication Token from Donately to start<br />If you don't already have a Donately account, you can <a target="_blank" href="https://www.dntly.com/a#/npo/signup">sign up for one here</a></p></div>
 	<?php elseif(!$dntly_options['account']): ?>
 		<div class="updated" id="message"><p><strong>Alert!</strong> You must identify which Donately Account to Connect to</p></div>
@@ -192,11 +192,11 @@ else{
 				<th><label for="category_base">Donately Admin Email Address</label></th>
 				<td class="col1"></td>
 				<td class="col2">
-					<?php if( $dntly_options['token'] ): ?>
+					<?php if( !empty( $dntly_options['token'] ) ) : ?>
 						<input type="text" class="regular-text code disabled" value="<?php echo $dntly_options['user']; ?>" id="dntly-user-name" name="" disabled="disabled">
 						<input type="hidden" value="<?php echo $dntly_options['user']; ?>" name="dntly_options[user]">
 					<?php else: ?>
-						<input type="text" class="regular-text code" value="<?php echo $dntly_options['user']; ?>" id="dntly-user-name" name="dntly_options[user]">
+						<input type="text" class="regular-text code" value="<?php echo isset( $dntly_options['user'] ) ? $dntly_options['user'] : ''; ?>" id="dntly-user-name" name="dntly_options[user]">
 					<?php endif; ?>
 				</td>
 			</tr>
@@ -204,14 +204,14 @@ else{
 				<th><label for="tag_base">Donately Admin Password</label></th>
 				<td class="col1"></td>
 				<td class="col2">
-					<?php if( $dntly_options['token'] ): ?>
+					<?php if( !empty( $dntly_options['token'] ) ): ?>
 						<input type="text" class="regular-text code disabled" value="***" id="dntly-user-password" name="" disabled="disabled">
 					<?php else: ?>
 						<input type="password" class="regular-text code" id="dntly-user-password" name="dntly_options[password]">
 					<?php endif; ?>
 				<td>
 			</tr>
-			<?php if($dntly_options['token']): ?>
+			<?php if( !empty( $dntly_options['token'] ) ): ?>
 			<tr>
 				<th><label for="tag_base">Donately Authentication Token</label></th>
 				<td class="col1"></td>
@@ -350,7 +350,7 @@ else{
 		</table>
 	</form>
 
-	<?php if($dntly_options['token']): ?>
+	<?php if( !empty( $dntly_options['token'] ) ) : ?>
 	<div style="margin:50px 0">
 		<form action="" method="post">
 			<table class="dntly-table">

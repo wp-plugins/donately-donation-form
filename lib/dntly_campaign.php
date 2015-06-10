@@ -8,11 +8,11 @@ $dntly_account_title = (isset($dntly_data['account_title']) ? $dntly_data['accou
 $dntly_account_id = get_post_meta($post->ID, '_dntly_account_id', true);
 $dntly_environment = get_post_meta($post->ID, '_dntly_environment', true);
 
-$campaign_goal = (isset($dntly_data['campaign_goal']) ? intval($dntly_data['campaign_goal']) : 0 );
+$campaign_goal   = (isset($dntly_data['campaign_goal']) ? intval($dntly_data['campaign_goal']) : 0 );
 $donations_count = (isset($dntly_data['donations_count']) ? intval($dntly_data['donations_count']) : 0 );
-$donors_count = (isset($dntly_data['donors_count']) ? intval($dntly_data['donors_count']) : 0 );
-$amount_raised = (isset($dntly_data['amount_raised']) ? intval($dntly_data['amount_raised']) : 0 );
-$percent_funded = (isset($dntly_data['percent_funded']) ? $dntly_data['percent_funded'] : 0 );
+$donors_count    = (isset($dntly_data['donors_count']) ? intval($dntly_data['donors_count']) : 0 );
+$amount_raised   = (isset($dntly_data['amount_raised']) ? intval($dntly_data['amount_raised']) : 0 );
+$percent_funded  = (isset($dntly_data['percent_funded']) ? $dntly_data['percent_funded'] : 0 );
 
 ?>
 <div id="dntly-info">

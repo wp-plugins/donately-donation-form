@@ -2,7 +2,7 @@
 Contributors: shanaver, bryanmonzon, elzizzo
 Tags: donations, donately, donate.ly, dntly, transactions, widget, stripe, authorize.net, non-profit
 Requires at least: 3.0.1
-Tested up to: 4.1.1
+Tested up to: 4.2.2
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -169,6 +169,9 @@ There are no monthly fees from Donately, but there is a small (under 2% average)
 
 = 4.0.0 =
 * set logging post type to private
+
+= 4.0.1 =
+* Clean up notices on settings page
 
 == Upgrade Notice ==
 
